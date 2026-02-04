@@ -310,14 +310,8 @@
                 : 'Pick a player and a game to start.';
             alert(message);
         });
+        const splashImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmQAAAGWCAYAAADWo58";
+        document.getElementById("splash").style.backgroundImage = `url(${splashImage})`;
     </script>
 </body>
 </html>
-
-<script>
-    const splashImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmQAAAGWCAYAAADWo58";
-    document.getElementById("splash").style.setProperty(
-        "background-image",
-        `url(${splashImage})`
-    );
-</script>
