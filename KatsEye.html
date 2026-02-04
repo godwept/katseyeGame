@@ -218,6 +218,7 @@
         }
 
 
+
         /* Character image cards */
         .char-card {
             position: relative;
@@ -234,6 +235,18 @@
             font-family: inherit;
             overflow: hidden;
             aspect-ratio: 3 / 4;
+            background-color: rgba(255, 255, 255, 0.05);
+            background-size: cover;
+            background-position: center top;
+        }
+
+        .char-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.5) 100%),
+                        linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 40%);
+            pointer-events: none;
         }
 
         .char-card:hover {
@@ -244,23 +257,6 @@
             border-color: var(--accent);
             transform: translateY(-4px);
             box-shadow: 0 15px 25px rgba(0, 0, 0, 0.35);
-        }
-
-        .char-card .char-img {
-            position: absolute;
-            inset: 0;
-            background-color: rgba(255, 255, 255, 0.05);
-            background-size: cover;
-            background-position: center top;
-        }
-
-        .char-card .char-img::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.5) 100%),
-                        linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 40%);
-            pointer-events: none;
         }
 
         .char-card h3 {
@@ -383,7 +379,8 @@
             const card = document.createElement('button');
             card.className = 'char-card';
             const imgId = name.toLowerCase();
-            card.innerHTML = `<div class="char-img" id="${imgId}"></div><h3>${name}</h3>`;
+            card.id = imgId;
+            card.innerHTML = `<h3>${name}</h3>`;
             card.addEventListener('click', () => {
                 selectedCharacter = name;
                 document.querySelectorAll('#characterGrid .char-card').forEach(el => el.classList.remove('selected'));
