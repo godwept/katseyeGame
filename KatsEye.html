@@ -220,18 +220,20 @@
 
         /* Character image cards */
         .char-card {
+            position: relative;
             display: flex;
             flex-direction: column;
+            justify-content: flex-end;
             align-items: center;
-            gap: 8px;
-            padding: 12px;
-            background: var(--panel);
+            padding: 0;
             border: 2px solid transparent;
             border-radius: 16px;
             cursor: pointer;
             transition: border-color 0.2s ease, transform 0.2s ease;
             color: var(--text);
             font-family: inherit;
+            overflow: hidden;
+            aspect-ratio: 3 / 4;
         }
 
         .char-card:hover {
@@ -245,22 +247,29 @@
         }
 
         .char-card .char-img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
+            position: absolute;
+            inset: 0;
             background-color: rgba(255, 255, 255, 0.05);
             background-size: cover;
-            background-position: center;
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            background-position: center top;
         }
 
-        .char-card.selected .char-img {
-            border-color: var(--accent);
+        .char-card .char-img::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.5) 100%),
+                        linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 40%);
+            pointer-events: none;
         }
 
         .char-card h3 {
+            position: relative;
+            z-index: 1;
             margin: 0;
+            padding: 12px 0;
             font-size: 0.95rem;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
         }
         /* Zucchini Drop game styles */
         #zucchini-drop {
