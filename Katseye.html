@@ -1,0 +1,1020 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Katseye Mini Games</title>
+    <style>
+        :root {
+            color-scheme: light dark;
+            --accent: #ff4fb6;
+            --accent-dark: #c71f7f;
+            --bg: #0d0d1a;
+            --panel: rgba(255, 255, 255, 0.08);
+            --text: #f4f4f8;
+            --muted: #9ea1b5;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: radial-gradient(circle at top, #372a74 0%, var(--bg) 60%);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+
+        .app-shell {
+            width: min(100%, 960px);
+            min-height: 560px;
+            background: rgba(8, 8, 18, 0.8);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 32px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+        }
+
+        h1,
+        h2 {
+            font-weight: 600;
+            margin: 0 0 16px;
+        }
+
+        p {
+            margin: 0 0 12px;
+            color: var(--muted);
+        }
+
+        .view {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            gap: 24px;
+            width: 100%;
+            min-height: 100%;
+            animation: fade 0.4s ease;
+        }
+
+            .view.active {
+                display: flex;
+            }
+
+        .hero-title {
+            font-size: clamp(2.4rem, 5vw, 3.2rem);
+            letter-spacing: 0.08em;
+        }
+
+        .play-btn,
+        .nav-btn,
+        .card-button {
+            border: none;
+            border-radius: 999px;
+            padding: 16px 32px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #fff;
+            background: linear-gradient(135deg, var(--accent), #7c6cf6);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+            .play-btn:hover,
+            .nav-btn:hover,
+            .card-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 16px 30px rgba(0, 0, 0, 0.4);
+            }
+
+        .nav-row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-btn.secondary {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .grid {
+            display: grid;
+            width: 100%;
+            gap: 18px;
+        }
+
+        #characterGrid {
+            align-self: stretch;
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .grid.games {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .card {
+            padding: 18px;
+            background: var(--panel);
+            border: 1px solid transparent;
+            border-radius: 16px;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+
+            .card.selected {
+                border-color: var(--accent);
+                transform: translateY(-4px);
+                box-shadow: 0 15px 25px rgba(0, 0, 0, 0.35);
+            }
+
+            .card h3 {
+                margin: 0 0 8px;
+            }
+
+            .card p {
+                margin: 0;
+                font-size: 0.9rem;
+            }
+
+        .card-button {
+            width: 100%;
+            border-radius: 12px;
+        }
+
+            .card-button.disabled,
+            .nav-btn:disabled {
+                opacity: 0.4;
+                pointer-events: none;
+            }
+
+        .tagline {
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        #splash {
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 0;
+            text-align: center;
+        }
+
+            #splash::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: radial-gradient(ellipse at center, transparent 0%, rgba(13, 13, 26, 0.3) 40%, rgba(13, 13, 26, 0.7) 70%, rgba(13, 13, 26, 0.95) 100%), linear-gradient(135deg, rgba(255, 79, 182, 0.08), rgba(124, 108, 246, 0.08));
+                z-index: 1;
+                pointer-events: none;
+            }
+
+            #splash > * {
+                position: relative;
+                z-index: 2;
+            }
+
+            #splash .hero-title {
+                text-shadow: 0 0 40px rgba(255, 79, 182, 0.4), 0 4px 8px rgba(0, 0, 0, 0.5);
+            }
+
+        @keyframes fade {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .app-shell {
+                padding: 24px 18px;
+            }
+        }
+
+
+
+        /* Character image cards */
+        .char-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0;
+            border: 2px solid transparent;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+            color: var(--text);
+            font-family: inherit;
+            overflow: hidden;
+            aspect-ratio: 3 / 4;
+            background-color: rgba(255, 255, 255, 0.05);
+            background-size: cover;
+            background-position: center top;
+        }
+
+            .char-card::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.5) 100%), linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 40%);
+                pointer-events: none;
+            }
+
+            .char-card:hover {
+                transform: translateY(-2px);
+            }
+
+            .char-card.selected {
+                border-color: var(--accent);
+                transform: translateY(-4px);
+                box-shadow: 0 15px 25px rgba(0, 0, 0, 0.35);
+            }
+
+            .char-card h3 {
+                position: relative;
+                z-index: 1;
+                margin: 0;
+                padding: 12px 0;
+                font-size: 0.95rem;
+                text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+            }
+            
+            .badge-list {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                z-index: 2;
+                align-items: flex-start;
+            }
+            
+            .badge {
+                background: rgba(0, 0, 0, 0.7);
+                backdrop-filter: blur(4px);
+                padding: 4px 8px;
+                border-radius: 6px;
+                font-size: 0.8rem;
+                font-weight: 600;
+                color: #fff;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                border: 1px solid rgba(255,255,255,0.1);
+            }
+        /* Zucchini Drop game styles */
+        #zucchini-drop {
+            padding: 16px;
+            gap: 12px;
+        }
+
+            #zucchini-drop .game-hud {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                max-width: 800px;
+                font-size: 1rem;
+                font-weight: 600;
+            }
+
+                #zucchini-drop .game-hud span {
+                    color: var(--accent);
+                }
+
+            #zucchini-drop canvas {
+                border-radius: 12px;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                background: linear-gradient(180deg, #1a1a3a 0%, #0d0d1a 100%);
+                max-width: 100%;
+                touch-action: none;
+            }
+
+            #zucchini-drop .game-over-msg {
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                gap: 16px;
+            }
+
+                #zucchini-drop .game-over-msg.show {
+                    display: flex;
+                }
+
+            #zucchini-drop .game-over-msg h2 {
+                color: var(--accent);
+            }
+
+        /* Memory Flip Styles */
+        #memory-flip .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            width: 100%;
+            max-width: 500px;
+            perspective: 1000px;
+        }
+
+        .memory-card {
+            aspect-ratio: 3/4;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            padding: 0;
+        }
+
+        .memory-card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .memory-card .face {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .memory-card .front {
+            background: linear-gradient(135deg, #1a1a3a, #372a74);
+            border: 2px solid rgba(255,255,255,0.1);
+            color: var(--accent);
+        }
+
+        .memory-card .back {
+            background: #fff;
+            transform: rotateY(180deg);
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body>
+    <main class="app-shell">
+        <section id="splash" class="view active">
+            <p class="tagline">Liv presents</p>
+            <h1 class="hero-title">KatseyeGames</h1>
+            <button class="play-btn" data-route="player-select">Play</button>
+        </section>
+
+        <section id="player-select" class="view" aria-live="polite">
+            <div>
+                <h2>Choose Your Player</h2>
+                <p>Select a Katseye member to represent you.</p>
+            </div>
+            <div class="grid characters" id="characterGrid"></div>
+            <div class="nav-row">
+                <button class="nav-btn secondary" data-route="splash">Back</button>
+                <button class="nav-btn" id="toGameSelect" disabled>Next</button>
+            </div>
+        </section>
+
+        <section id="game-select" class="view" aria-live="polite">
+            <div>
+                <h2>Pick a Game</h2>
+                <p>Each mini game spotlights a different Katseye vibe.</p>
+            </div>
+            <div class="grid games" id="gameGrid"></div>
+            <div class="nav-row">
+                <button class="nav-btn secondary" data-route="player-select">Back</button>
+                <button class="nav-btn" id="startGame" disabled>Start Game</button>
+            </div>
+        </section>
+
+        <section id="zucchini-drop" class="view" aria-live="polite">
+            <h2>Zucchini Drop</h2>
+            <div class="game-hud">
+                <div>Score: <span id="zd-score">0</span></div>
+                <div id="zd-lives"></div>
+            </div>
+            <canvas id="zd-canvas" width="800" height="500"></canvas>
+            <div class="game-over-msg" id="zd-game-over">
+                <h2>Game Over!</h2>
+                <p>Final score: <span id="zd-final-score">0</span></p>
+                <div class="nav-row">
+                    <button class="nav-btn secondary" data-route="game-select">Back to Games</button>
+                    <button class="nav-btn" id="zd-restart">Play Again</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="memory-flip" class="view" aria-live="polite">
+            <h2>Memory Flip</h2>
+            <div class="game-hud">
+                <div>Guesses Left: <span id="mf-lives">3</span></div>
+            </div>
+            <div class="memory-grid" id="mf-grid"></div>
+            <div class="game-over-msg" id="mf-game-over">
+                <h2 id="mf-msg-title">Game Over!</h2>
+                <p id="mf-msg-text"></p>
+                <div class="nav-row">
+                    <button class="nav-btn secondary" data-route="game-select">Back to Games</button>
+                    <button class="nav-btn" id="mf-restart">Play Again</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const views = document.querySelectorAll('.view');
+        const showView = targetId => {
+            views.forEach(view => view.classList.toggle('active', view.id === targetId));
+            if (targetId === 'player-select') refreshBadges();
+        };
+
+        function refreshBadges() {
+            document.querySelectorAll('.char-card').forEach(card => {
+                const name = card.dataset.name;
+                if (!name) return;
+                
+                // Zucchini Drop Badge
+                const zdScore = localStorage.getItem(`ks_hs_Zucchini Drop_${name}`) || 0;
+                const zdBadge = card.querySelector('.badge.zd');
+                if (zdBadge) zdBadge.innerHTML = `🥒 ${zdScore}`;
+
+                // Memory Flip Badge
+                const mfScore = localStorage.getItem(`ks_hs_Memory Flip_${name}`) || 0;
+                const mfBadge = card.querySelector('.badge.mf');
+                if (mfBadge) mfBadge.innerHTML = `🧠 ${mfScore}`;
+            });
+        }
+
+        document.querySelectorAll('[data-route]').forEach(button => {
+            button.addEventListener('click', () => showView(button.dataset.route));
+        });
+
+        const characters = ['Megan', 'Yoonchae', 'Manon', 'Daniela', 'Lara', 'Sophia'];
+        const characterGrid = document.getElementById('characterGrid');
+        const toGameSelect = document.getElementById('toGameSelect');
+        let selectedCharacter = '';
+
+        characters.forEach(name => {
+            const card = document.createElement('button');
+            card.className = 'char-card';
+            card.dataset.name = name;
+            const imgId = name.toLowerCase();
+            card.id = imgId;
+            // Initial placeholders for badges
+            card.innerHTML = `
+                <div class="badge-list">
+                    <div class="badge zd" title="Zucchini Drop High Score">🥒 0</div>
+                    <div class="badge mf" title="Memory Flip High Score">🧠 0</div>
+                    <!-- Placeholders for future games -->
+                    <div class="badge" title="Rhythm Tap (Coming Soon)">🎵 -</div>
+                </div>
+                <h3>${name}</h3>
+            `;
+            card.addEventListener('click', (e) => {
+                // Prevent badge clicks from triggering selection if needed, 
+                // currently entire card is button so it's fine.
+                selectedCharacter = name;
+                document.querySelectorAll('#characterGrid .char-card').forEach(el => el.classList.remove('selected'));
+                card.classList.add('selected');
+                toGameSelect.disabled = false;
+            });
+            characterGrid.appendChild(card);
+        });
+        
+        refreshBadges();
+
+        const games = [
+            { name: 'Zucchini Drop', description: 'Tap falling zucchinis to catch them before they hit the stage.' },
+            { name: 'Rhythm Tap', description: 'Hit beats with the drummer to keep the groove tight.' },
+            { name: 'Style Match', description: 'Drag looks together to complete today\'s stage outfit.' },
+            { name: 'Memory Flip', description: 'Reveal Katseye icons and match pairs under pressure.' },
+            { name: 'Dance Sequence', description: 'Repeat flashing arrows to nail the choreography.' }
+        ];
+
+        const gameGrid = document.getElementById('gameGrid');
+        const startGame = document.getElementById('startGame');
+        let selectedGame = '';
+
+        games.forEach(game => {
+            const card = document.createElement('button');
+            card.className = 'card card-button';
+            card.innerHTML = `<h3>${game.name}</h3><p>${game.description}</p>`;
+            card.addEventListener('click', () => {
+                selectedGame = game.name;
+                document.querySelectorAll('#gameGrid .card').forEach(el => el.classList.remove('selected'));
+                card.classList.add('selected');
+                startGame.disabled = false;
+            });
+            gameGrid.appendChild(card);
+        });
+
+        toGameSelect.addEventListener('click', () => showView('game-select'));
+        startGame.addEventListener('click', () => {
+            if (selectedGame === 'Zucchini Drop') {
+                showView('zucchini-drop');
+                startZucchiniDrop();
+            } else if (selectedGame === 'Memory Flip') {
+                showView('memory-flip');
+                startMemoryFlip();
+            } else {
+                alert(selectedGame + ' is coming soon!');
+            }
+        });
+
+        // Register the new game-over back buttons for routing
+        document.querySelectorAll('#zucchini-drop [data-route]').forEach(button => {
+            button.addEventListener('click', () => {
+                stopZucchiniDrop();
+                showView(button.dataset.route);
+            });
+        });
+        document.querySelectorAll('#memory-flip [data-route]').forEach(button => {
+            button.addEventListener('click', () => {
+                showView(button.dataset.route);
+            });
+        });
+
+        // ── Zucchini Drop Game ──────────────────────────────
+        const zdCanvas = document.getElementById('zd-canvas');
+        const zdCtx = zdCanvas.getContext('2d');
+        const zdScoreEl = document.getElementById('zd-score');
+        const zdLivesEl = document.getElementById('zd-lives');
+        const zdGameOverEl = document.getElementById('zd-game-over');
+        const zdFinalScoreEl = document.getElementById('zd-final-score');
+
+        const zucchiniImg = new Image();
+        zucchiniImg.onload = () => console.log("Zucchini image loaded successfully");
+        zucchiniImg.onerror = (e) => {
+            console.error("Failed to load zucchini image", e);
+            // This will pause execution if you have the browser's Developer Tools open (F12)
+            debugger; 
+        };
+        // Removed crossOrigin to avoid CORS issues with opaque resources
+        zucchiniImg.src = "https://raw.githubusercontent.com/godwept/katseyeGame/refs/heads/main/zucchini-removebg-preview.png";
+
+        let zdAnimFrame = null;
+        let zdState = null;
+
+        function stopZucchiniDrop() {
+            if (zdAnimFrame) {
+                cancelAnimationFrame(zdAnimFrame);
+                zdAnimFrame = null;
+            }
+        }
+
+        function startZucchiniDrop() {
+            stopZucchiniDrop();
+            zdGameOverEl.classList.remove('show');
+            zdCanvas.style.display = 'block';
+
+            const W = zdCanvas.width;
+            const H = zdCanvas.height;
+
+            zdState = {
+                score: 0,
+                lives: 3,
+                particles: [],
+                zucchinis: [],
+                spawnTimer: 0,
+                spawnInterval: 60,
+                baseSpeed: 2,
+                elapsed: 0,
+                gameOver: false
+            };
+
+            // ── Audio System ──
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            const audioCtx = new AudioContext();
+            
+            const playTone = (freq, type, duration, vol = 0.1) => {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            };
+
+            const catchSnd = new Audio("https://github.com/godwept/katseyeGame/raw/refs/heads/main/splattt.mp3");
+
+            const sfx = {
+                catch: () => {
+                    const s = catchSnd.cloneNode();
+                    s.volume = 0.5;
+                    s.play().catch(e => {}); 
+                },
+                miss: () => {
+                    playTone(150, 'sawtooth', 0.3, 0.1); // Low buzz
+                },
+                gameOver: () => {
+                    const now = audioCtx.currentTime;
+                    playTone(400, 'triangle', 0.2, 0.2);
+                    setTimeout(() => playTone(300, 'triangle', 0.2, 0.2), 200);
+                    setTimeout(() => playTone(200, 'triangle', 0.4, 0.2), 400);
+                }
+            };
+
+            // Load character image for badge
+            let charImg = null;
+            try {
+                const charEl = document.getElementById(selectedCharacter.toLowerCase());
+                if (charEl && charEl.style.backgroundImage) {
+                    const match = charEl.style.backgroundImage.match(/url\(["']?(.*?)["']?\)/);
+                    if (match) {
+                        charImg = new Image();
+                        charImg.src = match[1];
+                    }
+                }
+            } catch(e) { console.error("Error setting up char badge", e); }
+
+            zdScoreEl.textContent = '0';
+            updateLives();
+
+            function updateLives() {
+                zdLivesEl.textContent = '\u2764\uFE0F'.repeat(zdState.lives);
+            }
+
+            function spawnParticles(x, y) {
+                for (let i = 0; i < 8; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = 2 + Math.random() * 4;
+                    zdState.particles.push({
+                        x: x,
+                        y: y,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        life: 1.0,
+                        color: `hsl(${90 + Math.random() * 40}, 80%, 60%)`
+                    });
+                }
+            }
+
+            function spawnZucchini() {
+                const size = 30 + Math.random() * 20;
+                zdState.zucchinis.push({
+                    x: size + Math.random() * (W - size * 2),
+                    y: -size,
+                    w: size,
+                    h: size * 2.2,
+                    speed: zdState.baseSpeed + Math.random() * 1.5,
+                    angle: (Math.random() - 0.5) * 0.3
+                });
+            }
+
+            function drawZucchini(z) {
+                zdCtx.save();
+                zdCtx.translate(z.x, z.y);
+                zdCtx.rotate(z.angle);
+
+                if (zucchiniImg.complete && zucchiniImg.naturalWidth !== 0) {
+                    zdCtx.drawImage(zucchiniImg, -z.w / 2, -z.h / 2, z.w, z.h);
+                } else {
+                    // Fallback to original drawing if image not loaded
+                    // Body
+                    zdCtx.beginPath();
+                    const rw = z.w / 2;
+                    const rh = z.h / 2;
+                    zdCtx.ellipse(0, 0, rw, rh, 0, 0, Math.PI * 2);
+                    const grad = zdCtx.createLinearGradient(-rw, 0, rw, 0);
+                    grad.addColorStop(0, '#2d6e2d');
+                    grad.addColorStop(0.3, '#4a9e3f');
+                    grad.addColorStop(0.7, '#4a9e3f');
+                    grad.addColorStop(1, '#2d6e2d');
+                    zdCtx.fillStyle = grad;
+                    zdCtx.fill();
+
+                    // Highlight
+                    zdCtx.beginPath();
+                    zdCtx.ellipse(-rw * 0.2, -rh * 0.3, rw * 0.3, rh * 0.5, 0, 0, Math.PI * 2);
+                    zdCtx.fillStyle = 'rgba(255,255,255,0.12)';
+                    zdCtx.fill();
+
+                    // Stem
+                    zdCtx.beginPath();
+                    zdCtx.moveTo(-2, -rh);
+                    zdCtx.lineTo(0, -rh - 6);
+                    zdCtx.lineTo(2, -rh);
+                    zdCtx.fillStyle = '#7a6b3a';
+                    zdCtx.fill();
+                }
+
+                zdCtx.restore();
+            }
+
+// Basket removed
+
+            function tick() {
+                if (zdState.gameOver) return;
+
+                const s = zdState;
+                const W = zdCanvas.width;
+                const H = zdCanvas.height;
+
+                // Difficulty ramp
+                s.elapsed++;
+                if (s.elapsed % 400 === 0) {
+                    s.baseSpeed += 0.2;
+                    s.spawnInterval = Math.max(15, s.spawnInterval - 4);
+                }
+
+                // Spawn
+                s.spawnTimer++;
+                if (s.spawnTimer >= s.spawnInterval) {
+                    spawnZucchini();
+                    s.spawnTimer = 0;
+                }
+
+                // Update zucchinis
+                const alive = [];
+                for (const z of s.zucchinis) {
+                    z.y += z.speed;
+                    // Miss check
+                    if (z.y - z.h / 2 > H) {
+                        s.lives--;
+                        updateLives();
+                        if (s.lives <= 0) {
+                            s.gameOver = true;
+                            sfx.gameOver();
+                            
+                            // Save High Score
+                            const key = `ks_hs_Zucchini Drop_${selectedCharacter}`;
+                            const currentHigh = parseInt(localStorage.getItem(key) || '0');
+                            if (s.score > currentHigh) {
+                                localStorage.setItem(key, s.score);
+                            }
+
+                            zdFinalScoreEl.textContent = s.score;
+                            zdCanvas.style.display = 'none';
+                            zdGameOverEl.classList.add('show');
+                            return;
+                        }
+                        sfx.miss();
+                        continue;
+                    }
+                    alive.push(z);
+                }
+                s.zucchinis = alive;
+
+                // Update particles
+                for (let i = s.particles.length - 1; i >= 0; i--) {
+                    const p = s.particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.2; 
+                    p.life -= 0.03;
+                    if (p.life <= 0) s.particles.splice(i, 1);
+                }
+
+                // Draw
+                zdCtx.clearRect(0, 0, W, H);
+
+                // Draw Character Badge
+                if (charImg && charImg.complete && charImg.naturalWidth > 0) {
+                    zdCtx.save();
+                    const size = 50;
+                    const pad = 12;
+                    const bx = W - size - pad;
+                    const by = pad;
+                    
+                    // Clip circle
+                    zdCtx.beginPath();
+                    zdCtx.arc(bx + size/2, by + size/2, size/2, 0, Math.PI * 2);
+                    zdCtx.closePath();
+                    zdCtx.clip();
+                    
+                    // Draw image
+                    zdCtx.drawImage(charImg, bx, by, size, size);
+                    zdCtx.restore();
+                    
+                    // Ring
+                    zdCtx.beginPath();
+                    zdCtx.arc(bx + size/2, by + size/2, size/2, 0, Math.PI * 2);
+                    zdCtx.strokeStyle = 'rgba(255, 79, 182, 0.8)';
+                    zdCtx.lineWidth = 3;
+                    zdCtx.stroke();
+                }
+
+                // Stage floor
+                zdCtx.fillStyle = 'rgba(255,255,255,0.03)';
+                zdCtx.fillRect(0, H - 10, W, 10);
+
+                for (const z of s.zucchinis) drawZucchini(z);
+                
+                // Draw particles
+                for (const p of s.particles) {
+                    zdCtx.globalAlpha = p.life;
+                    zdCtx.fillStyle = p.color;
+                    zdCtx.beginPath();
+                    zdCtx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+                    zdCtx.fill();
+                }
+                zdCtx.globalAlpha = 1.0;
+
+                zdAnimFrame = requestAnimationFrame(tick);
+            }
+
+            // Input handlers
+            function onPointerDown(e) {
+                if (zdState.gameOver) return;
+                const rect = zdCanvas.getBoundingClientRect();
+                const scaleX = zdCanvas.width / rect.width;
+                const scaleY = zdCanvas.height / rect.height;
+                const clickX = (e.clientX - rect.left) * scaleX;
+                const clickY = (e.clientY - rect.top) * scaleY;
+
+                for (let i = zdState.zucchinis.length - 1; i >= 0; i--) {
+                    const z = zdState.zucchinis[i];
+                    const dx = clickX - z.x;
+                    const dy = clickY - z.y;
+                    // Hit box with radius approx z.w
+                    if (dx*dx + dy*dy < (z.w * 1.5) * (z.w * 1.5)) {
+                        zdState.score++;
+                        zdScoreEl.textContent = zdState.score;
+                        spawnParticles(z.x, z.y);
+                        sfx.catch();
+                        zdState.zucchinis.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+
+            zdCanvas.onpointerdown = onPointerDown;
+            zdAnimFrame = requestAnimationFrame(tick);
+        }
+
+        document.getElementById('zd-restart').addEventListener('click', startZucchiniDrop);
+
+        // ── Memory Flip Game ────────────────────────────────
+        const mfGrid = document.getElementById('mf-grid');
+        const mfLivesEl = document.getElementById('mf-lives');
+        const mfGameOverEl = document.getElementById('mf-game-over');
+        const mfMsgTitle = document.getElementById('mf-msg-title');
+        const mfMsgText = document.getElementById('mf-msg-text');
+        
+        const mfImages = [
+           'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3hmMSZGuk3jWfuImsXwTzMgotPUDycpHOdA&s',
+           'https://dailynorthwestern.com/wp-content/uploads/2025/05/KATESYE-GNARLY-EMILY-LICHTY--1200x800.jpg',
+           'https://mma.prnewswire.com/media/2869532/LANEIGE__KATSEYE_x_LANEIGE_JuicePop_Box_Lip_Tint_Campaign.jpg?w=300',
+           'https://i.scdn.co/image/ab67616d00001e02f8d4d00ffe09373efb13ce29',
+           'https://i.namu.wiki/i/TN-huHevy9Vmzh8FeMcAV48tFeRyPsoiY-ltUjjDAornSgMLV0hMxUQe73i6Dnw_ZTmRwZaFmHjOo0jrQCIf7g.webp',
+           'https://img.sbs.co.kr/newsnet/etv/upload/2025/03/25/30000982286_700.jpg',
+           'https://d.kpopstarz.com/en/full/1726882/katseye-megan.png?w=1600&h=1200&q=88&f=c3ced39ba954db40ee8704fed4fd1fea',
+           'https://assets.teenvogue.com/photos/667c03f59c1986bd2711e8f9/master/w_1600%2Cc_limit/KATSEYE%2520DEBUT%2520TEEN%2520VOGUE%2520EXCLUSIVE7.jpg',
+           'https://preview.redd.it/another-magnolia-contender-katseyes-manon-bannerman-v0-srejd8fkgz9f1.jpg?width=640&crop=smart&auto=webp&s=7a61394b50394e1cb8ddb5569ad49a6864f5a2e0',
+           'https://assets.teenvogue.com/photos/68375fc1223107616576ff99/16:9/w_2560%2Cc_limit/FINAL-KATSEYE-TEENVOGUE-WM-8.jpg'
+        ];
+
+        let mfState = {
+            cards: [],
+            lives: 3,
+            flipped: [],
+            matched: 0,
+            locked: false
+        };
+
+        function startMemoryFlip() {
+            // Debug: Check which images are loading
+            mfImages.forEach((src, idx) => {
+                const img = new Image();
+                img.onload = () => console.log(`Image ${idx+1} OK: ${src}`);
+                img.onerror = () => console.error(`Image ${idx+1} FAILED: ${src}`);
+                img.src = src;
+            });
+
+            mfGameOverEl.classList.remove('show');
+            mfGrid.style.display = 'grid';
+            mfState = {
+                cards: [],
+                lives: 10,
+                flipped: [],
+                matched: 0,
+                locked: false
+            };
+            mfLivesEl.textContent = mfState.lives;
+            
+            // Create pairs
+            let deck = [...mfImages, ...mfImages];
+            // Shuffle
+            deck.sort(() => Math.random() - 0.5);
+
+            mfGrid.innerHTML = '';
+            deck.forEach((imgSrc, i) => {
+                const card = document.createElement('button');
+                card.className = 'memory-card';
+                card.innerHTML = `
+                    <div class="face front">?</div>
+                    <div class="face back" style="background-image: url('${imgSrc}')"></div>
+                `;
+                card.dataset.index = i;
+                card.dataset.img = imgSrc;
+                card.addEventListener('click', () => flipCard(card));
+                mfGrid.appendChild(card);
+            });
+        }
+
+        function flipCard(card) {
+            if (mfState.locked || card.classList.contains('flipped') || mfState.flipped.includes(card)) return;
+
+            card.classList.add('flipped');
+            mfState.flipped.push(card);
+
+            if (mfState.flipped.length === 2) {
+                checkForMatch();
+            }
+        }
+
+        function checkForMatch() {
+            mfState.locked = true;
+            const [c1, c2] = mfState.flipped;
+            const isMatch = c1.dataset.img === c2.dataset.img;
+
+            if (isMatch) {
+                mfState.matched++;
+                mfState.flipped = [];
+                mfState.locked = false;
+                
+                if (mfState.matched === 10) {
+                    endMemoryFlip(true);
+                }
+            } else {
+                mfState.lives--;
+                mfLivesEl.textContent = mfState.lives;
+                setTimeout(() => {
+                    c1.classList.remove('flipped');
+                    c2.classList.remove('flipped');
+                    mfState.flipped = [];
+                    mfState.locked = false;
+                    
+                    if (mfState.lives <= 0) {
+                        endMemoryFlip(false);
+                    }
+                }, 1000);
+            }
+        }
+
+        function endMemoryFlip(win) {
+            mfGrid.style.display = 'none';
+            mfGameOverEl.classList.add('show');
+            if (win) {
+                mfMsgTitle.textContent = "You Won!";
+                mfMsgText.textContent = "All pairs matched!";
+                // Check high score (win = 10 matches)
+                const key = `ks_hs_Memory Flip_${selectedCharacter}`;
+                // maybe save score based on lives left? 
+                const score = 10 + mfState.lives * 5; 
+                const currentHigh = parseInt(localStorage.getItem(key) || '0');
+                if (score > currentHigh) {
+                    localStorage.setItem(key, score);
+                }
+            } else {
+                mfMsgTitle.textContent = "Game Over!";
+                mfMsgText.textContent = "Run out of guesses!";
+            }
+        }
+
+        document.getElementById('mf-restart').addEventListener('click', startMemoryFlip);
+    </script>
+    <script>
+        document.getElementById("splash").style.backgroundImage = "url(https://www.hollywoodreporter.com/wp-content/uploads/2024/08/KATSEYE-Photo-Credit_-Cody-Critcheloe-1-e1724442108414.jpg?w=2000&h=1126&crop=1&resize=1000%2C563)";
+        document.getElementById("megan").style.backgroundImage = "url(https://d.kpopstarz.com/en/full/1726882/katseye-megan.png?w=1600&h=1200&q=88&f=c3ced39ba954db40ee8704fed4fd1fea)";
+        document.getElementById("yoonchae").style.backgroundImage = "url(https://phinf.wevpstatic.net/MjAyNTA2MTlfMjky/MDAxNzUwMjcxNDE2NDk0.svsKLEXReFlRP9iPkm6rceDTP1QMdCKfaBHdNoNG8qMg.SX6P1xE-bGSpf3T8vJRcFeOhLYLGIb_VjonmiWjVx9Ag.PNG/0511a24a-34d8-4d64-abc9-4d343e26669a.png?type=w670)";
+        document.getElementById("manon").style.backgroundImage = "url(https://assets.teenvogue.com/photos/68c1592af1ede25ca68592d9/16:9/w_2560%2Cc_limit/2234222216)";
+        document.getElementById("daniela").style.backgroundImage = "url(https://i0.wp.com/zaloramalaysiablog.wpcomstaging.com/wp-content/uploads/2025/06/snapins-ai_3633246668164069339-1.jpg?fit=1080%2C1350&ssl=1)";
+        document.getElementById("lara").style.backgroundImage = "url(https://img.sbs.co.kr/newsnet/etv/upload/2025/03/25/30000982286_700.jpg)";
+        document.getElementById("sophia").style.backgroundImage = "url(https://i.namu.wiki/i/TN-huHevy9Vmzh8FeMcAV48tFeRyPsoiY-ltUjjDAornSgMLV0hMxUQe73i6Dnw_ZTmRwZaFmHjOo0jrQCIf7g.webp)";
+    </script>
+</body>
+</html>
