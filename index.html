@@ -663,6 +663,7 @@
             };
 
             const catchSnd = new Audio("https://github.com/godwept/katseyeGame/raw/refs/heads/main/splattt.mp3");
+            const missSnd = new Audio("https://github.com/godwept/katseyeGame/raw/refs/heads/main/gnarly.mp3");
 
             const sfx = {
                 catch: () => {
@@ -671,7 +672,9 @@
                     s.play().catch(e => {}); 
                 },
                 miss: () => {
-                    playTone(150, 'sawtooth', 0.3, 0.1); // Low buzz
+                    const s = missSnd.cloneNode();
+                    s.volume = 0.5;
+                    s.play().catch(e => {});
                 },
                 gameOver: () => {
                     const now = audioCtx.currentTime;
