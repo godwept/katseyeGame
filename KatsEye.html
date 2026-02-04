@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Katseye Mini Games</title>
+    <style>
+        :root {
+            color-scheme: light dark;
+            --accent: #ff4fb6;
+            --accent-dark: #c71f7f;
+            --bg: #0d0d1a;
+            --panel: rgba(255, 255, 255, 0.08);
+            --text: #f4f4f8;
+            --muted: #9ea1b5;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: radial-gradient(circle at top, #372a74 0%, var(--bg) 60%);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+
+        .app-shell {
+            width: min(100%, 960px);
+            min-height: 560px;
+            background: rgba(8, 8, 18, 0.8);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 32px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1,
+        h2 {
+            font-weight: 600;
+            margin: 0 0 16px;
+        }
+
+        p {
+            margin: 0 0 12px;
+            color: var(--muted);
+        }
+
+        .view {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            gap: 24px;
+            height: 100%;
+            animation: fade 0.4s ease;
+        }
+
+        .view.active {
+            display: flex;
+        }
+
+        .hero-title {
+            font-size: clamp(2.4rem, 5vw, 3.2rem);
+            letter-spacing: 0.08em;
+        }
+
+        .play-btn,
+        .nav-btn,
+        .card-button {
+            border: none;
+            border-radius: 999px;
+            padding: 16px 32px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #fff;
+            background: linear-gradient(135deg, var(--accent), #7c6cf6);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .play-btn:hover,
+        .nav-btn:hover,
+        .card-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .nav-row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-btn.secondary {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .grid {
+            display: grid;
+            width: 100%;
+            gap: 18px;
+        }
+
+        .grid.characters {
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        }
+
+        .grid.games {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .card {
+            padding: 18px;
+            background: var(--panel);
+            border: 1px solid transparent;
+            border-radius: 16px;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .card.selected {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.35);
+        }
+
+        .card h3 {
+            margin: 0 0 8px;
+        }
+
+        .card p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .card-button {
+            width: 100%;
+            border-radius: 12px;
+        }
+
+        .card-button.disabled,
+        .nav-btn:disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .tagline {
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        #splash {
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        #splash::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at center, transparent 0%, rgba(13, 13, 26, 0.3) 40%, rgba(13, 13, 26, 0.7) 70%, rgba(13, 13, 26, 0.95) 100%),
+                linear-gradient(135deg, rgba(255, 79, 182, 0.08), rgba(124, 108, 246, 0.08));
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        #splash > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        #splash .hero-title {
+            text-shadow: 0 0 40px rgba(255, 79, 182, 0.4),
+                         0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes fade {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .app-shell {
+                padding: 24px 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="app-shell">
+    <section id="splash" class="view active">
+        <p class="tagline">Liv presents</p>
+        <h1 class="hero-title">KatseyeGames</h1>
+        <button class="play-btn" data-route="player-select">Play</button>
+    </section>
+
+        <section id="player-select" class="view" aria-live="polite">
+            <div>
+                <h2>Choose Your Player</h2>
+                <p>Select a Katseye member to represent you.</p>
+            </div>
+            <div class="grid characters" id="characterGrid"></div>
+            <div class="nav-row">
+                <button class="nav-btn secondary" data-route="splash">Back</button>
+                <button class="nav-btn" id="toGameSelect" disabled>Next</button>
+            </div>
+        </section>
+
+        <section id="game-select" class="view" aria-live="polite">
+            <div>
+                <h2>Pick a Game</h2>
+                <p>Each mini game spotlights a different Katseye vibe.</p>
+            </div>
+            <div class="grid games" id="gameGrid"></div>
+            <div class="nav-row">
+                <button class="nav-btn secondary" data-route="player-select">Back</button>
+                <button class="nav-btn" id="startGame" disabled>Start Game</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const views = document.querySelectorAll('.view');
+        const showView = targetId => {
+            views.forEach(view => view.classList.toggle('active', view.id === targetId));
+        };
+
+        document.querySelectorAll('[data-route]').forEach(button => {
+            button.addEventListener('click', () => showView(button.dataset.route));
+        });
+
+        const characters = ['Megan', 'Yoonchae', 'Manon', 'Daniella', 'Lara', 'Sophia'];
+        const characterGrid = document.getElementById('characterGrid');
+        const toGameSelect = document.getElementById('toGameSelect');
+        let selectedCharacter = '';
+
+        characters.forEach(name => {
+            const card = document.createElement('button');
+            card.className = 'card card-button';
+            card.innerHTML = `<h3>${name}</h3><p>Tap to lead with ${name}.</p>`;
+            card.addEventListener('click', () => {
+                selectedCharacter = name;
+                document.querySelectorAll('#characterGrid .card').forEach(el => el.classList.remove('selected'));
+                card.classList.add('selected');
+                toGameSelect.disabled = false;
+            });
+            characterGrid.appendChild(card);
+        });
+
+        const games = [
+            { name: 'Zucchini Drop', description: 'Catch falling zucchinis before they hit the stage.' },
+            { name: 'Rhythm Tap', description: 'Hit beats with the drummer to keep the groove tight.' },
+            { name: 'Style Match', description: 'Drag looks together to complete today\'s stage outfit.' },
+            { name: 'Memory Flip', description: 'Reveal Katseye icons and match pairs under pressure.' },
+            { name: 'Dance Sequence', description: 'Repeat flashing arrows to nail the choreography.' }
+        ];
+
+        const gameGrid = document.getElementById('gameGrid');
+        const startGame = document.getElementById('startGame');
+        let selectedGame = '';
+
+        games.forEach(game => {
+            const card = document.createElement('button');
+            card.className = 'card card-button';
+            card.innerHTML = `<h3>${game.name}</h3><p>${game.description}</p>`;
+            card.addEventListener('click', () => {
+                selectedGame = game.name;
+                document.querySelectorAll('#gameGrid .card').forEach(el => el.classList.remove('selected'));
+                card.classList.add('selected');
+                startGame.disabled = false;
+            });
+            gameGrid.appendChild(card);
+        });
+
+        toGameSelect.addEventListener('click', () => showView('game-select'));
+        startGame.addEventListener('click', () => {
+            const message = selectedCharacter && selectedGame
+                ? `${selectedCharacter} is ready for ${selectedGame}!`
+                : 'Pick a player and a game to start.';
+            alert(message);
+        });
+    </script>
+</body>
+</html>
+
+<script>
+    const splashImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmQAAAGWCAYAAADWo58";
+    document.getElementById("splash").style.setProperty(
+        "background-image",
+        `url(${splashImage})`
+    );
+</script>
