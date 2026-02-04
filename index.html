@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
@@ -449,11 +449,45 @@
         </section>
     </main>
 
+    <!-- Background Music -->
+    <audio id="bgMusic" loop>
+        <source src="https://github.com/godwept/katseyeGame/raw/refs/heads/main/main.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
+        const bgMusic = document.getElementById('bgMusic');
+        bgMusic.volume = 0.3;
+        let musicStarted = false;
+
         const views = document.querySelectorAll('.view');
+        const menuViews = ['splash', 'player-select', 'game-select'];
+        const gameViews = ['zucchini-drop', 'memory-flip'];
+
+        // Try to start music on page load (for splash screen)
+        bgMusic.play().then(() => {
+            musicStarted = true;
+            console.log('Music started automatically');
+        }).catch(e => {
+            console.log('Music autoplay blocked, will play on Play button click:', e);
+        });
+
         const showView = targetId => {
+            // Start music on first navigation if not already playing
+            if (!musicStarted && menuViews.includes(targetId)) {
+                bgMusic.play().then(() => {
+                    musicStarted = true;
+                }).catch(e => console.log('Music play failed:', e));
+            }
+
             views.forEach(view => view.classList.toggle('active', view.id === targetId));
             if (targetId === 'player-select') refreshBadges();
+            
+            // Control background music
+            if (menuViews.includes(targetId)) {
+                bgMusic.play().catch(e => console.log('Music play failed:', e));
+            } else if (gameViews.includes(targetId)) {
+                bgMusic.pause();
+            }
         };
 
         function refreshBadges() {
@@ -884,6 +918,11 @@
         const mfMsgTitle = document.getElementById('mf-msg-title');
         const mfMsgText = document.getElementById('mf-msg-text');
         
+        const cardFlipSound = new Audio("https://github.com/godwept/katseyeGame/raw/refs/heads/main/cardFlip.mp3");
+        cardFlipSound.oncanplaythrough = () => console.log("Card flip sound loaded successfully");
+        cardFlipSound.onerror = (e) => console.error("Failed to load card flip sound", e);
+        cardFlipSound.preload = 'auto';
+        
         const mfImages = [
            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3hmMSZGuk3jWfuImsXwTzMgotPUDycpHOdA&s',
            'https://dailynorthwestern.com/wp-content/uploads/2025/05/KATESYE-GNARLY-EMILY-LICHTY--1200x800.jpg',
@@ -945,8 +984,19 @@
             });
         }
 
+
         function flipCard(card) {
             if (mfState.locked || card.classList.contains('flipped') || mfState.flipped.includes(card)) return;
+
+            // Play flip sound
+            const flipSnd = cardFlipSound.cloneNode();
+            flipSnd.volume = 0.4;
+            console.log("Attempting to play card flip sound...");
+            flipSnd.play().then(() => {
+                console.log("Card flip sound played successfully");
+            }).catch(e => {
+                console.error("Failed to play card flip sound:", e);
+            });
 
             card.classList.add('flipped');
             mfState.flipped.push(card);
@@ -955,6 +1005,7 @@
                 checkForMatch();
             }
         }
+
 
         function checkForMatch() {
             mfState.locked = true;
