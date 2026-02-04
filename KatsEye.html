@@ -216,6 +216,51 @@
             }
         }
 
+
+        /* Character image cards */
+        .char-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            background: var(--panel);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+            color: var(--text);
+            font-family: inherit;
+        }
+
+        .char-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .char-card.selected {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.35);
+        }
+
+        .char-card .char-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.05);
+            background-size: cover;
+            background-position: center;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .char-card.selected .char-img {
+            border-color: var(--accent);
+        }
+
+        .char-card h3 {
+            margin: 0;
+            font-size: 0.95rem;
+        }
         /* Zucchini Drop game styles */
         #zucchini-drop {
             padding: 16px;
@@ -326,17 +371,17 @@
 
         characters.forEach(name => {
             const card = document.createElement('button');
-            card.className = 'card card-button';
-            card.innerHTML = `<h3>${name}</h3><p>Tap to lead with ${name}.</p>`;
+            card.className = 'char-card';
+            const imgId = name.toLowerCase();
+            card.innerHTML = `<div class="char-img" id="${imgId}"></div><h3>${name}</h3>`;
             card.addEventListener('click', () => {
                 selectedCharacter = name;
-                document.querySelectorAll('#characterGrid .card').forEach(el => el.classList.remove('selected'));
+                document.querySelectorAll('#characterGrid .char-card').forEach(el => el.classList.remove('selected'));
                 card.classList.add('selected');
                 toGameSelect.disabled = false;
             });
             characterGrid.appendChild(card);
         });
-
         const games = [
             { name: 'Zucchini Drop', description: 'Catch falling zucchinis before they hit the stage.' },
             { name: 'Rhythm Tap', description: 'Hit beats with the drummer to keep the groove tight.' },
@@ -631,32 +676,32 @@
     );
     const megan = "data:image/png;base64,iVBORw0KGgoAII=";
     document.getElementById("megan").style.setProperty(
-        "-image",
+        "background-image",
         `url(${megan})`
     );
     const yoonchae = "data:image/png;base64,iVBORw0KGgoAII=";
-    document.getElementById("oonchae").style.setProperty(
-        "-image",
-        `url(${oonchae})`
+    document.getElementById("yoonchae").style.setProperty(
+        "background-image",
+        `url(${yoonchae})`
     );
     const manon = "data:image/png;base64,iVBORw0KGgoAII=";
     document.getElementById("manon").style.setProperty(
-        "-image",
+        "background-image",
         `url(${manon})`
     );
     const daniela = "data:image/png;base64,iVBORw0KGgoAII=";
     document.getElementById("daniela").style.setProperty(
-        "-image",
+        "background-image",
         `url(${daniela})`
     );
     const lara = "data:image/png;base64,iVBORw0KGgoAII=";
     document.getElementById("lara").style.setProperty(
-        "-image",
+        "background-image",
         `url(${lara})`
     );
     const sophia = "data:image/png;base64,iVBORw0KGgoAII=";
     document.getElementById("sophia").style.setProperty(
-        "-image",
+        "background-image",
         `url(${sophia})`
     );
   </script>
