@@ -342,6 +342,18 @@
             perspective: 1000px;
         }
 
+        .player-badge {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 79, 182, 0.8);
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            margin: 0 auto;
+            display: none;
+        }
+
         .memory-card {
             aspect-ratio: 3/4;
             background: transparent;
@@ -380,6 +392,171 @@
             transform: rotateY(180deg);
             background-size: cover;
             background-position: center;
+        }
+
+        /* Makeup Game Styles */
+        #makeup-game {
+            padding: 16px;
+            gap: 16px;
+        }
+
+            #makeup-game .makeup-container {
+                display: flex;
+                gap: 20px;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: flex-start;
+            }
+
+            #makeup-game .canvas-wrapper {
+                position: relative;
+            }
+
+            #makeup-game canvas {
+                border-radius: 12px;
+                border: 2px solid rgba(255, 255, 255, 0.2);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+                cursor: crosshair;
+                max-width: 100%;
+                touch-action: none;
+            }
+
+            .canvas-undo {
+                position: absolute;
+                top: 12px;
+                right: 12px;
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                border: none;
+                background: rgba(13, 13, 26, 0.75);
+                color: #fff;
+                font-size: 1.3rem;
+                cursor: pointer;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: transform 0.2s ease, opacity 0.2s ease;
+            }
+
+            .canvas-undo:hover:not(:disabled) {
+                transform: translateY(-2px);
+            }
+
+            .canvas-undo:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+            }
+
+            #makeup-game .toolbar {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+                background: var(--panel);
+                padding: 20px;
+                border-radius: 12px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                min-width: 200px;
+            }
+
+            #makeup-game .tool-section {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            #makeup-game .tool-section h3 {
+                margin: 0;
+                font-size: 0.9rem;
+                color: var(--muted);
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            #makeup-game .tool-buttons {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            #makeup-game .tool-btn {
+                padding: 10px;
+                border: 2px solid rgba(255, 255, 255, 0.2);
+                border-radius: 8px;
+                background: rgba(255, 255, 255, 0.05);
+                color: var(--text);
+                cursor: pointer;
+                transition: all 0.2s ease;
+                font-size: 0.85rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+            }
+
+                #makeup-game .tool-btn:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                    transform: translateY(-2px);
+                }
+
+                #makeup-game .tool-btn.active {
+                    border-color: var(--accent);
+                    background: rgba(255, 79, 182, 0.2);
+                }
+
+            #makeup-game .tool-icon {
+                font-size: 1.5rem;
+            }
+
+            #makeup-game .slider-control {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            #makeup-game .slider-control label {
+                font-size: 0.85rem;
+                color: var(--muted);
+            }
+
+            #makeup-game .slider-control input[type="range"] {
+                width: 100%;
+                cursor: pointer;
+            }
+
+            #makeup-game .slider-value {
+                text-align: center;
+                color: var(--accent);
+                font-weight: 600;
+            }
+
+            #makeup-game .nav-btn.active {
+                background: rgba(255, 79, 182, 0.2);
+                border-color: var(--accent);
+                color: var(--accent);
+            }
+
+            #makeup-game .zoom-controls {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            #makeup-game .zoom-hint {
+                font-size: 0.75rem;
+                color: var(--muted);
+                margin: 0;
+            }
+
+        .char-card canvas.makeup-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
         }
     </style>
 </head>
@@ -434,6 +611,7 @@
 
         <section id="memory-flip" class="view" aria-live="polite">
             <h2>Memory Flip</h2>
+            <div class="player-badge" id="mf-badge" aria-hidden="true"></div>
             <div class="game-hud">
                 <div>Guesses Left: <span id="mf-lives">3</span></div>
             </div>
@@ -447,11 +625,88 @@
                 </div>
             </div>
         </section>
+
+        <section id="makeup-game" class="view" aria-live="polite">
+            <h2>Makeup Studio</h2>
+            <div class="makeup-container">
+                <div class="canvas-wrapper">
+                    <canvas id="makeup-canvas" width="400" height="533"></canvas>
+                    <button class="canvas-undo" id="makeup-undo" aria-label="Undo last stroke">↺</button>
+                </div>
+                <div class="toolbar">
+                    <div class="tool-section">
+                        <h3>Tools</h3>
+                        <div class="tool-buttons">
+                            <button class="tool-btn active" data-tool="blush">
+                                <span class="tool-icon">💗</span>
+                                <span>Blush</span>
+                            </button>
+                            <button class="tool-btn" data-tool="lipstick">
+                                <span class="tool-icon">💄</span>
+                                <span>Lipstick</span>
+                            </button>
+                            <button class="tool-btn" data-tool="mascara">
+                                <span class="tool-icon">👁️</span>
+                                <span>Mascara</span>
+                            </button>
+                            <button class="tool-btn" data-tool="eyeliner">
+                                <span class="tool-icon">✏️</span>
+                                <span>Eyeliner</span>
+                            </button>
+                            <button class="tool-btn" data-tool="eyeshadow">
+                                <span class="tool-icon">🎨</span>
+                                <span>Eyeshadow</span>
+                            </button>
+                            <button class="tool-btn" data-tool="eraser">
+                                <span class="tool-icon">🧽</span>
+                                <span>Eraser</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="tool-section">
+                        <div class="slider-control">
+                            <label for="brush-size">Brush Size</label>
+                            <input type="range" id="brush-size" min="5" max="40" value="15" />
+                            <div class="slider-value" id="brush-size-val">15px</div>
+                        </div>
+                    </div>
+                    <div class="tool-section">
+                        <h3>Zoom &amp; Pan</h3>
+                        <div class="slider-control">
+                            <label for="zoom-level">Zoom</label>
+                            <input type="range" id="zoom-level" min="1" max="3" step="0.1" value="1" />
+                            <div class="slider-value" id="zoom-level-val">1x</div>
+                        </div>
+                        <div class="zoom-controls">
+                            <button class="nav-btn secondary" id="toggle-pan" style="width: 100%; border-radius: 8px;">Pan Mode Off</button>
+                            <button class="nav-btn secondary" id="reset-zoom" style="width: 100%; border-radius: 8px;">Reset View</button>
+                        </div>
+                        <p class="zoom-hint">Pinch, scroll, or drag in Pan Mode to move around.</p>
+                    </div>
+                    <div class="tool-section">
+                        <button class="nav-btn secondary" id="makeup-clear" style="width: 100%; border-radius: 8px;">Clear All</button>
+                        <button class="nav-btn" id="makeup-save" style="width: 100%; border-radius: 8px;">Save Makeup</button>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-row">
+                <button class="nav-btn secondary" data-route="game-select">Back to Games</button>
+            </div>
+        </section>
     </main>
 
     <!-- Background Music -->
     <audio id="bgMusic" loop>
         <source src="https://github.com/godwept/katseyeGame/raw/refs/heads/main/main.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="zucchiniMusic" loop>
+        <source src="https://github.com/godwept/katseyeGame/raw/refs/heads/main/zucchini.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="memoryFlipMusic" loop>
+        <source src="https://github.com/godwept/katseyeGame/raw/refs/heads/main/memoryFlip.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="makeupMusic" loop>
+        <source src="https://github.com/godwept/katseyeGame/raw/refs/heads/main/makeup.mp3" type="audio/mpeg">
     </audio>
 
     <script>
@@ -459,9 +714,18 @@
         bgMusic.volume = 0.3;
         let musicStarted = false;
 
+        const zucchiniMusic = document.getElementById('zucchiniMusic');
+        zucchiniMusic.volume = 0.3;
+        
+        const memoryFlipMusic = document.getElementById('memoryFlipMusic');
+        memoryFlipMusic.volume = 0.3;
+        
+        const makeupMusic = document.getElementById('makeupMusic');
+        makeupMusic.volume = 0.3;
+
         const views = document.querySelectorAll('.view');
         const menuViews = ['splash', 'player-select', 'game-select'];
-        const gameViews = ['zucchini-drop', 'memory-flip'];
+        const gameViews = ['zucchini-drop', 'memory-flip', 'makeup-game'];
 
         // Try to start music on page load (for splash screen)
         bgMusic.play().then(() => {
@@ -480,7 +744,10 @@
             }
 
             views.forEach(view => view.classList.toggle('active', view.id === targetId));
-            if (targetId === 'player-select') refreshBadges();
+            if (targetId === 'player-select') {
+                refreshBadges();
+                refreshMakeupOverlays();
+            }
             
             // Control background music
             if (menuViews.includes(targetId)) {
@@ -516,6 +783,14 @@
         const toGameSelect = document.getElementById('toGameSelect');
         let selectedCharacter = '';
 
+        function getSelectedCharacterImage() {
+            if (!selectedCharacter) return '';
+            const charEl = document.getElementById(selectedCharacter.toLowerCase());
+            if (!charEl || !charEl.style.backgroundImage) return '';
+            const match = charEl.style.backgroundImage.match(/url\(["']?(.*?)["']?\)/);
+            return match ? match[1] : '';
+        }
+
         characters.forEach(name => {
             const card = document.createElement('button');
             card.className = 'char-card';
@@ -548,7 +823,7 @@
         const games = [
             { name: 'Zucchini Drop', description: 'Tap falling zucchinis to catch them before they hit the stage.' },
             { name: 'Rhythm Tap', description: 'Hit beats with the drummer to keep the groove tight.' },
-            { name: 'Style Match', description: 'Drag looks together to complete today\'s stage outfit.' },
+            { name: 'Makeup Studio', description: 'Customize your character with makeup and save your style.' },
             { name: 'Memory Flip', description: 'Reveal Katseye icons and match pairs under pressure.' },
             { name: 'Dance Sequence', description: 'Repeat flashing arrows to nail the choreography.' }
         ];
@@ -578,6 +853,9 @@
             } else if (selectedGame === 'Memory Flip') {
                 showView('memory-flip');
                 startMemoryFlip();
+            } else if (selectedGame === 'Makeup Studio') {
+                showView('makeup-game');
+                startMakeupGame();
             } else {
                 alert(selectedGame + ' is coming soon!');
             }
@@ -592,6 +870,15 @@
         });
         document.querySelectorAll('#memory-flip [data-route]').forEach(button => {
             button.addEventListener('click', () => {
+                memoryFlipMusic.pause();
+                memoryFlipMusic.currentTime = 0;
+                showView(button.dataset.route);
+            });
+        });
+        document.querySelectorAll('#makeup-game [data-route]').forEach(button => {
+            button.addEventListener('click', () => {
+                makeupMusic.pause();
+                makeupMusic.currentTime = 0;
                 showView(button.dataset.route);
             });
         });
@@ -622,12 +909,18 @@
                 cancelAnimationFrame(zdAnimFrame);
                 zdAnimFrame = null;
             }
+            zucchiniMusic.pause();
+            zucchiniMusic.currentTime = 0;
         }
 
         function startZucchiniDrop() {
             stopZucchiniDrop();
             zdGameOverEl.classList.remove('show');
             zdCanvas.style.display = 'block';
+
+            // Start game music
+            zucchiniMusic.currentTime = 0;
+            zucchiniMusic.play().catch(e => console.log('Zucchini music play failed:', e));
 
             const W = zdCanvas.width;
             const H = zdCanvas.height;
@@ -687,13 +980,10 @@
             // Load character image for badge
             let charImg = null;
             try {
-                const charEl = document.getElementById(selectedCharacter.toLowerCase());
-                if (charEl && charEl.style.backgroundImage) {
-                    const match = charEl.style.backgroundImage.match(/url\(["']?(.*?)["']?\)/);
-                    if (match) {
-                        charImg = new Image();
-                        charImg.src = match[1];
-                    }
+                const charSrc = getSelectedCharacterImage();
+                if (charSrc) {
+                    charImg = new Image();
+                    charImg.src = charSrc;
                 }
             } catch(e) { console.error("Error setting up char badge", e); }
 
@@ -851,9 +1141,19 @@
                     zdCtx.arc(bx + size/2, by + size/2, size/2, 0, Math.PI * 2);
                     zdCtx.closePath();
                     zdCtx.clip();
-                    
-                    // Draw image
-                    zdCtx.drawImage(charImg, bx, by, size, size);
+
+                    // Draw cropped image preserving aspect ratio (cover)
+                    const imgW = charImg.naturalWidth;
+                    const imgH = charImg.naturalHeight;
+                    let srcX = 0;
+                    let srcY = 0;
+                    let srcSize = Math.min(imgW, imgH);
+                    if (imgW > imgH) {
+                        srcX = (imgW - imgH) / 2;
+                    } else if (imgH > imgW) {
+                        srcY = (imgH - imgW) / 2;
+                    }
+                    zdCtx.drawImage(charImg, srcX, srcY, srcSize, srcSize, bx, by, size, size);
                     zdCtx.restore();
                     
                     // Ring
@@ -948,6 +1248,19 @@
         };
 
         function startMemoryFlip() {
+            const badgeEl = document.getElementById('mf-badge');
+            if (badgeEl) {
+                const imgSrc = getSelectedCharacterImage();
+                if (imgSrc) {
+                    badgeEl.style.backgroundImage = `url('${imgSrc}')`;
+                    badgeEl.style.display = 'block';
+                    badgeEl.setAttribute('aria-hidden', 'false');
+                } else {
+                    badgeEl.style.backgroundImage = '';
+                    badgeEl.style.display = 'none';
+                    badgeEl.setAttribute('aria-hidden', 'true');
+                }
+            }
             // Debug: Check which images are loading
             mfImages.forEach((src, idx) => {
                 const img = new Image();
@@ -958,6 +1271,11 @@
 
             mfGameOverEl.classList.remove('show');
             mfGrid.style.display = 'grid';
+            
+            // Start game music
+            memoryFlipMusic.currentTime = 0;
+            memoryFlipMusic.play().catch(e => console.log('Memory Flip music play failed:', e));
+            
             mfState = {
                 cards: [],
                 lives: 10,
@@ -1042,6 +1360,11 @@
         function endMemoryFlip(win) {
             mfGrid.style.display = 'none';
             mfGameOverEl.classList.add('show');
+            
+            // Stop game music
+            memoryFlipMusic.pause();
+            memoryFlipMusic.currentTime = 0;
+            
             if (win) {
                 mfMsgTitle.textContent = "You Won!";
                 mfMsgText.textContent = "All pairs matched!";
@@ -1060,6 +1383,645 @@
         }
 
         document.getElementById('mf-restart').addEventListener('click', startMemoryFlip);
+
+        // ── Makeup Game ─────────────────────────────────────
+        const makeupCanvas = document.getElementById('makeup-canvas');
+        const makeupCtx = makeupCanvas.getContext('2d');
+        const makeupLayerCanvas = document.createElement('canvas');
+        makeupLayerCanvas.width = makeupCanvas.width;
+        makeupLayerCanvas.height = makeupCanvas.height;
+        const makeupLayerCtx = makeupLayerCanvas.getContext('2d');
+        const brushSizeSlider = document.getElementById('brush-size');
+        const brushSizeVal = document.getElementById('brush-size-val');
+        const zoomSlider = document.getElementById('zoom-level');
+        const zoomSliderVal = document.getElementById('zoom-level-val');
+        const panToggleBtn = document.getElementById('toggle-pan');
+        const resetZoomBtn = document.getElementById('reset-zoom');
+        const undoBtn = document.getElementById('makeup-undo');
+
+        const makeupTools = {
+            blush: { color: 'rgba(255, 105, 180, 0.4)', name: 'Blush' },
+            lipstick: { color: 'rgba(220, 20, 60, 0.7)', name: 'Lipstick' },
+            mascara: { color: 'rgba(0, 0, 0, 0.8)', name: 'Mascara' },
+            eyeliner: { color: 'rgba(0, 0, 0, 0.9)', name: 'Eyeliner' },
+            eyeshadow: { color: 'rgba(138, 43, 226, 0.5)', name: 'Eyeshadow' },
+            eraser: { color: 'eraser', name: 'Eraser' }
+        };
+
+        let makeupState = {
+            currentTool: 'blush',
+            brushSize: 15,
+            isDrawing: false,
+            strokes: [],
+            currentStroke: null,
+            characterImg: null,
+            imgDrawRect: { x: 0, y: 0, w: 400, h: 533 }, // Where the image is actually drawn
+            activePointerId: null
+        };
+
+        const makeupView = {
+            scale: 1,
+            minScale: 1,
+            maxScale: 3,
+            translateX: 0,
+            translateY: 0,
+            panMode: false
+        };
+
+        const activePointers = new Map();
+        let panReference = null;
+        let pinchData = null;
+
+        brushSizeSlider.addEventListener('input', (e) => {
+            makeupState.brushSize = parseInt(e.target.value);
+            brushSizeVal.textContent = makeupState.brushSize + 'px';
+        });
+
+        zoomSlider.addEventListener('input', (e) => {
+            applyZoom(parseFloat(e.target.value));
+        });
+
+        resetZoomBtn.addEventListener('click', () => {
+            resetMakeupView();
+        });
+
+        panToggleBtn.addEventListener('click', () => {
+            makeupView.panMode = !makeupView.panMode;
+            updatePanButton();
+        });
+
+        document.querySelectorAll('#makeup-game .tool-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tool = btn.dataset.tool;
+                if (tool) {
+                    makeupState.currentTool = tool;
+                    document.querySelectorAll('#makeup-game .tool-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                }
+            });
+        });
+
+        document.getElementById('makeup-clear').addEventListener('click', () => {
+            if (confirm('Clear all makeup? This cannot be undone.')) {
+                makeupState.strokes = [];
+                redrawMakeupCanvas();
+                updateUndoButton();
+            }
+        });
+
+        document.getElementById('makeup-save').addEventListener('click', () => {
+            const key = `ks_makeup_${selectedCharacter}`;
+            localStorage.setItem(key, JSON.stringify(makeupState.strokes));
+            alert('Makeup saved! Your character card has been updated.');
+            refreshMakeupOverlays();
+        });
+
+        if (undoBtn) {
+            undoBtn.addEventListener('click', () => {
+                if (makeupState.strokes.length === 0) return;
+                makeupState.strokes.pop();
+                redrawMakeupCanvas();
+                updateUndoButton();
+            });
+        }
+
+        function startMakeupGame() {
+            makeupState.strokes = [];
+            makeupState.isDrawing = false;
+            makeupState.currentStroke = null;
+            makeupState.characterImg = null;
+            makeupState.activePointerId = null;
+            activePointers.clear();
+            panReference = null;
+            pinchData = null;
+            makeupView.panMode = false;
+            updatePanButton();
+            resetMakeupView();
+            
+            // Start game music
+            makeupMusic.currentTime = 0;
+            makeupMusic.play().catch(e => console.log('Makeup music play failed:', e));
+
+            // Load existing makeup if any
+            const key = `ks_makeup_${selectedCharacter}`;
+            const saved = localStorage.getItem(key);
+            if (saved) {
+                try {
+                    makeupState.strokes = JSON.parse(saved);
+                } catch (e) {
+                    console.error('Failed to load saved makeup', e);
+                }
+            }
+            updateUndoButton();
+
+            // Load character image
+            const charEl = document.getElementById(selectedCharacter.toLowerCase());
+            if (charEl && charEl.style.backgroundImage) {
+                const match = charEl.style.backgroundImage.match(/url\(["']?(.*?)["']?\)/);
+                if (match) {
+                    const img = new Image();
+                    // Don't use crossOrigin to avoid CORS issues
+                    img.onload = () => {
+                        console.log('Character image loaded successfully for makeup game');
+                        makeupState.characterImg = img;
+                        redrawMakeupCanvas();
+                    };
+                    img.onerror = (e) => {
+                        console.error('Failed to load character image for makeup game:', e);
+                        // If loading fails, draw with gradient fallback
+                        makeupState.characterImg = null;
+                        redrawMakeupCanvas();
+                    };
+                    img.src = match[1];
+                    console.log('Loading character image:', match[1]);
+                }
+            } else {
+                console.warn('No character image found, using gradient fallback');
+                redrawMakeupCanvas();
+            }
+        }
+
+        function redrawMakeupCanvas(previewStroke = null) {
+            const W = makeupCanvas.width;
+            const H = makeupCanvas.height;
+
+            // Rebuild makeup layer so eraser only affects makeup
+            makeupLayerCtx.clearRect(0, 0, W, H);
+            makeupState.strokes.forEach(stroke => drawStroke(stroke, makeupLayerCtx));
+            if (previewStroke) {
+                drawStroke(previewStroke, makeupLayerCtx);
+            }
+
+            // Clear base canvas before drawing portrait
+            makeupCtx.clearRect(0, 0, W, H);
+            makeupCtx.save();
+            makeupCtx.setTransform(makeupView.scale, 0, 0, makeupView.scale, makeupView.translateX, makeupView.translateY);
+
+            // Draw character image if loaded
+            if (makeupState.characterImg && makeupState.characterImg.complete && makeupState.characterImg.naturalWidth > 0) {
+                console.log('Drawing character image on canvas');
+                
+                const img = makeupState.characterImg;
+                const imgAspect = img.naturalWidth / img.naturalHeight;
+                const canvasAspect = W / H;
+                
+                let drawW, drawH, drawX, drawY;
+                
+                // Calculate dimensions to fit image while maintaining aspect ratio
+                if (imgAspect > canvasAspect) {
+                    // Image is wider - fit to width
+                    drawW = W;
+                    drawH = W / imgAspect;
+                    drawX = 0;
+                    drawY = (H - drawH) / 2;
+                } else {
+                    // Image is taller - fit to height
+                    drawH = H;
+                    drawW = H * imgAspect;
+                    drawX = (W - drawW) / 2;
+                    drawY = 0;
+                }
+                
+                // Store the rectangle where image is drawn for coordinate mapping
+                makeupState.imgDrawRect = { x: drawX, y: drawY, w: drawW, h: drawH };
+                
+                // Fill background with dark color
+                makeupCtx.fillStyle = '#1a1a2a';
+                makeupCtx.fillRect(0, 0, W, H);
+                
+                // Draw the image with correct aspect ratio
+                makeupCtx.drawImage(img, drawX, drawY, drawW, drawH);
+            } else {
+                console.log('Using gradient fallback (image not loaded)');
+                // Reset to full canvas
+                makeupState.imgDrawRect = { x: 0, y: 0, w: W, h: H };
+                
+                // Fallback gradient background
+                const grad = makeupCtx.createLinearGradient(0, 0, 0, H);
+                grad.addColorStop(0, '#2a2a4a');
+                grad.addColorStop(1, '#1a1a2a');
+                makeupCtx.fillStyle = grad;
+                makeupCtx.fillRect(0, 0, W, H);
+                
+                // Add text to indicate waiting for image
+                makeupCtx.fillStyle = '#ffffff';
+                makeupCtx.font = '16px "Segoe UI"';
+                makeupCtx.textAlign = 'center';
+                makeupCtx.fillText('Loading character image...', W/2, H/2);
+            }
+
+            // Lay makeup strokes over portrait
+            makeupCtx.drawImage(makeupLayerCanvas, 0, 0);
+            makeupCtx.restore();
+        }
+
+        function drawStroke(stroke, ctx = makeupLayerCtx) {
+            if (stroke.points.length < 2) return;
+
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.lineWidth = stroke.size;
+
+            if (stroke.tool === 'eraser') {
+                ctx.globalCompositeOperation = 'destination-out';
+            } else {
+                ctx.globalCompositeOperation = 'source-over';
+            }
+            
+            ctx.strokeStyle = stroke.color;
+
+            ctx.beginPath();
+            ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
+            for (let i = 1; i < stroke.points.length; i++) {
+                ctx.lineTo(stroke.points[i].x, stroke.points[i].y);
+            }
+            ctx.stroke();
+
+            ctx.globalCompositeOperation = 'source-over';
+        }
+
+        function getMakeupCanvasCoords(e) {
+            const devicePoint = clientToDevice({ clientX: e.clientX, clientY: e.clientY });
+            const world = deviceToWorld(devicePoint);
+            return {
+                x: Math.max(0, Math.min(makeupCanvas.width, world.x)),
+                y: Math.max(0, Math.min(makeupCanvas.height, world.y))
+            };
+        }
+
+        function clientToDevice(point) {
+            const rect = makeupCanvas.getBoundingClientRect();
+            const scaleX = makeupCanvas.width / rect.width;
+            const scaleY = makeupCanvas.height / rect.height;
+            return {
+                x: (point.clientX - rect.left) * scaleX,
+                y: (point.clientY - rect.top) * scaleY
+            };
+        }
+
+        function deviceToWorld(point) {
+            return {
+                x: (point.x - makeupView.translateX) / makeupView.scale,
+                y: (point.y - makeupView.translateY) / makeupView.scale
+            };
+        }
+
+        function worldToDevice(point, targetScale = makeupView.scale, targetTranslateX = makeupView.translateX, targetTranslateY = makeupView.translateY) {
+            return {
+                x: point.x * targetScale + targetTranslateX,
+                y: point.y * targetScale + targetTranslateY
+            };
+        }
+
+        function clampView() {
+            const maxOffsetX = makeupCanvas.width * (1 - makeupView.scale);
+            const maxOffsetY = makeupCanvas.height * (1 - makeupView.scale);
+            makeupView.translateX = Math.min(0, Math.max(maxOffsetX, makeupView.translateX));
+            makeupView.translateY = Math.min(0, Math.max(maxOffsetY, makeupView.translateY));
+        }
+
+        function getViewportCenterWorld() {
+            const deviceCenter = { x: makeupCanvas.width / 2, y: makeupCanvas.height / 2 };
+            return deviceToWorld(deviceCenter);
+        }
+
+        function applyZoom(targetScale, anchorWorld = null, desiredDevice = null) {
+            if (Number.isNaN(targetScale)) return;
+            const clamped = Math.min(makeupView.maxScale, Math.max(makeupView.minScale, targetScale));
+            const worldPoint = anchorWorld || getViewportCenterWorld();
+            const devicePoint = desiredDevice || worldToDevice(worldPoint);
+            makeupView.scale = clamped;
+            makeupView.translateX = devicePoint.x - worldPoint.x * makeupView.scale;
+            makeupView.translateY = devicePoint.y - worldPoint.y * makeupView.scale;
+            clampView();
+            redrawMakeupCanvas(makeupState.currentStroke);
+            updateZoomUI();
+        }
+
+        function resetMakeupView() {
+            makeupView.scale = 1;
+            makeupView.translateX = 0;
+            makeupView.translateY = 0;
+            clampView();
+            updateZoomUI();
+            redrawMakeupCanvas(makeupState.currentStroke);
+        }
+
+        function updateZoomUI() {
+            const sliderMin = parseFloat(zoomSlider.min);
+            const sliderMax = parseFloat(zoomSlider.max);
+            const clampedValue = Math.max(sliderMin, Math.min(sliderMax, makeupView.scale));
+            zoomSlider.value = clampedValue.toString();
+            const precise = Math.round(makeupView.scale * 100) / 100;
+            const formatted = parseFloat(precise.toFixed(2)).toString();
+            zoomSliderVal.textContent = `${formatted}x`;
+        }
+
+        function updatePanButton() {
+            if (makeupView.panMode) {
+                panToggleBtn.textContent = 'Pan Mode On';
+                panToggleBtn.classList.add('active');
+            } else {
+                panToggleBtn.textContent = 'Pan Mode Off';
+                panToggleBtn.classList.remove('active');
+            }
+            panToggleBtn.setAttribute('aria-pressed', makeupView.panMode ? 'true' : 'false');
+        }
+
+        function updateUndoButton() {
+            if (!undoBtn) return;
+            undoBtn.disabled = makeupState.strokes.length === 0;
+        }
+
+        function startStroke(e) {
+            const tool = makeupState.currentTool;
+            const toolData = makeupTools[tool];
+            makeupState.isDrawing = true;
+            makeupState.activePointerId = e.pointerId;
+            const pos = getMakeupCanvasCoords(e);
+            makeupState.currentStroke = {
+                tool: tool,
+                color: tool === 'eraser' ? 'rgba(255,255,255,1)' : toolData.color,
+                size: makeupState.brushSize,
+                points: [pos]
+            };
+        }
+
+        function finishActiveStroke() {
+            if (makeupState.currentStroke) {
+                makeupState.strokes.push(makeupState.currentStroke);
+                makeupState.currentStroke = null;
+                redrawMakeupCanvas();
+                updateUndoButton();
+            }
+            makeupState.isDrawing = false;
+            makeupState.activePointerId = null;
+        }
+
+        function startPan(e) {
+            const rect = makeupCanvas.getBoundingClientRect();
+            const scaleX = makeupCanvas.width / rect.width;
+            const scaleY = makeupCanvas.height / rect.height;
+            panReference = {
+                pointerId: e.pointerId,
+                startX: e.clientX,
+                startY: e.clientY,
+                translateX: makeupView.translateX,
+                translateY: makeupView.translateY,
+                scaleX,
+                scaleY
+            };
+        }
+
+        function updatePan(e) {
+            if (!panReference || panReference.pointerId !== e.pointerId) return;
+            const deltaX = (e.clientX - panReference.startX) * panReference.scaleX;
+            const deltaY = (e.clientY - panReference.startY) * panReference.scaleY;
+            makeupView.translateX = panReference.translateX + deltaX;
+            makeupView.translateY = panReference.translateY + deltaY;
+            clampView();
+            redrawMakeupCanvas(makeupState.currentStroke);
+        }
+
+        function endPan(e) {
+            if (!panReference) return;
+            if (!e || panReference.pointerId === e.pointerId) {
+                panReference = null;
+            }
+        }
+
+        function handlePinchGesture() {
+            const pointers = Array.from(activePointers.values());
+            if (pointers.length < 2) return;
+            const [a, b] = pointers;
+            const dist = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+            if (!pinchData) {
+                pinchData = {
+                    startScale: makeupView.scale,
+                    startDistance: dist
+                };
+            }
+            if (!pinchData.startDistance) return;
+            const scaleFactor = dist / pinchData.startDistance;
+            const targetScale = pinchData.startScale * scaleFactor;
+            const centerClient = {
+                clientX: (a.clientX + b.clientX) / 2,
+                clientY: (a.clientY + b.clientY) / 2
+            };
+            const centerDevice = clientToDevice(centerClient);
+            const anchorWorld = deviceToWorld(centerDevice);
+            applyZoom(targetScale, anchorWorld, centerDevice);
+        }
+
+        function handleMakeupWheel(e) {
+            e.preventDefault();
+            const delta = e.deltaY < 0 ? 0.1 : -0.1;
+            const devicePoint = clientToDevice({ clientX: e.clientX, clientY: e.clientY });
+            const anchorWorld = deviceToWorld(devicePoint);
+            applyZoom(makeupView.scale + delta, anchorWorld, devicePoint);
+        }
+
+        function handleMakeupPointerDown(e) {
+            if (e.button && e.button !== 0) return;
+            makeupCanvas.setPointerCapture(e.pointerId);
+            activePointers.set(e.pointerId, { clientX: e.clientX, clientY: e.clientY });
+
+            if (activePointers.size >= 2) {
+                finishActiveStroke();
+                panReference = null;
+                pinchData = null;
+                return;
+            }
+
+            if (makeupView.panMode || e.button === 1 || e.ctrlKey) {
+                finishActiveStroke();
+                startPan(e);
+                return;
+            }
+
+            startStroke(e);
+        }
+
+        function handleMakeupPointerMove(e) {
+            if (activePointers.has(e.pointerId)) {
+                activePointers.set(e.pointerId, { clientX: e.clientX, clientY: e.clientY });
+            }
+
+            if (activePointers.size >= 2) {
+                handlePinchGesture();
+                return;
+            }
+
+            if (panReference && panReference.pointerId === e.pointerId) {
+                updatePan(e);
+                return;
+            }
+
+            if (!makeupView.panMode && makeupState.isDrawing && makeupState.currentStroke && makeupState.activePointerId === e.pointerId) {
+                const pos = getMakeupCanvasCoords(e);
+                makeupState.currentStroke.points.push(pos);
+                redrawMakeupCanvas(makeupState.currentStroke);
+            }
+        }
+
+        function handleMakeupPointerUp(e) {
+            if (panReference && panReference.pointerId === e.pointerId) {
+                endPan(e);
+            }
+
+            if (makeupState.isDrawing && makeupState.activePointerId === e.pointerId) {
+                finishActiveStroke();
+            }
+
+            activePointers.delete(e.pointerId);
+            if (activePointers.size < 2) {
+                pinchData = null;
+            }
+
+            if (makeupCanvas.releasePointerCapture) {
+                try {
+                    makeupCanvas.releasePointerCapture(e.pointerId);
+                } catch (err) {
+                    /* ignore */
+                }
+            }
+        }
+
+        makeupCanvas.addEventListener('wheel', handleMakeupWheel, { passive: false });
+        makeupCanvas.addEventListener('pointerdown', handleMakeupPointerDown);
+        makeupCanvas.addEventListener('pointermove', handleMakeupPointerMove);
+        makeupCanvas.addEventListener('pointerup', handleMakeupPointerUp);
+        makeupCanvas.addEventListener('pointercancel', handleMakeupPointerUp);
+        updateZoomUI();
+        updatePanButton();
+        updateUndoButton();
+
+        // Render makeup overlays on character cards
+        function refreshMakeupOverlays() {
+            document.querySelectorAll('.char-card').forEach(card => {
+                const name = card.dataset.name;
+                if (!name) return;
+
+                // Remove existing overlay if any
+                const existingCanvas = card.querySelector('canvas.makeup-overlay');
+                if (existingCanvas) {
+                    existingCanvas.remove();
+                }
+
+                // Load makeup data
+                const key = `ks_makeup_${name}`;
+                const saved = localStorage.getItem(key);
+                if (!saved) return;
+
+                let strokes = [];
+                try {
+                    strokes = JSON.parse(saved);
+                } catch (e) {
+                    return;
+                }
+
+                if (strokes.length === 0) return;
+
+                // Get character image to calculate aspect ratio
+                const charEl = document.getElementById(name.toLowerCase());
+                if (!charEl || !charEl.style.backgroundImage) return;
+                
+                const match = charEl.style.backgroundImage.match(/url\(["']?(.*?)["']?\)/);
+                if (!match) return;
+
+                // Load the image to get its dimensions
+                const img = new Image();
+                img.onload = () => {
+                    // Create overlay canvas
+                    const canvas = document.createElement('canvas');
+                    canvas.className = 'makeup-overlay';
+                    canvas.width = 400;
+                    canvas.height = 533;
+                    card.appendChild(canvas);
+
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Calculate coordinate transformation from makeup game to character card
+                    // Makeup game uses aspect-ratio preservation (full image with bars)
+                    // Character card uses background-size: cover (cropped to fill)
+                    const W = canvas.width;
+                    const H = canvas.height;
+                    const imgAspect = img.naturalWidth / img.naturalHeight;
+                    const canvasAspect = W / H;
+                    
+                    // Calculate where image is in makeup game (aspect-ratio preserved)
+                    let makeupDrawW, makeupDrawH, makeupDrawX, makeupDrawY;
+                    if (imgAspect > canvasAspect) {
+                        makeupDrawW = W;
+                        makeupDrawH = W / imgAspect;
+                        makeupDrawX = 0;
+                        makeupDrawY = (H - makeupDrawH) / 2;
+                    } else {
+                        makeupDrawH = H;
+                        makeupDrawW = H * imgAspect;
+                        makeupDrawX = (W - makeupDrawW) / 2;
+                        makeupDrawY = 0;
+                    }
+                    
+                    // Calculate where image is with background-size: cover
+                    // (fills entire area, may crop - background-position: center top)
+                    let coverDrawW, coverDrawH, coverDrawX, coverDrawY;
+                    if (imgAspect > canvasAspect) {
+                        // Image is wider - fit to HEIGHT, crop sides
+                        coverDrawH = H;
+                        coverDrawW = H * imgAspect;
+                        coverDrawX = (W - coverDrawW) / 2; // center horizontally
+                        coverDrawY = 0; // top aligned
+                    } else {
+                        // Image is taller - fit to WIDTH, crop top/bottom
+                        coverDrawW = W;
+                        coverDrawH = W / imgAspect;
+                        coverDrawX = 0;
+                        coverDrawY = 0; // top aligned (background-position: center top)
+                    }
+                    
+                    // Calculate scale factor between makeup game and cover display
+                    const scaleX = coverDrawW / makeupDrawW;
+                    const scaleY = coverDrawH / makeupDrawH;
+                    const offsetX = coverDrawX - makeupDrawX * scaleX;
+                    const offsetY = coverDrawY - makeupDrawY * scaleY;
+
+                    // Replay strokes with coordinate transformation
+                    strokes.forEach(stroke => {
+                        if (stroke.points.length < 2) return;
+
+                        ctx.lineCap = 'round';
+                        ctx.lineJoin = 'round';
+                        ctx.lineWidth = stroke.size * scaleX; // Scale brush size too
+
+                        if (stroke.tool === 'eraser') {
+                            ctx.globalCompositeOperation = 'destination-out';
+                            ctx.strokeStyle = 'rgba(0,0,0,1)';
+                        } else {
+                            ctx.globalCompositeOperation = 'source-over';
+                            ctx.strokeStyle = stroke.color;
+                        }
+
+                        ctx.beginPath();
+                        // Transform first point
+                        const firstX = stroke.points[0].x * scaleX + offsetX;
+                        const firstY = stroke.points[0].y * scaleY + offsetY;
+                        ctx.moveTo(firstX, firstY);
+                        
+                        // Transform remaining points
+                        for (let i = 1; i < stroke.points.length; i++) {
+                            const x = stroke.points[i].x * scaleX + offsetX;
+                            const y = stroke.points[i].y * scaleY + offsetY;
+                            ctx.lineTo(x, y);
+                        }
+                        ctx.stroke();
+
+                        ctx.globalCompositeOperation = 'source-over';
+                    });
+                };
+                img.src = match[1];
+            });
+        }
     </script>
     <script>
         document.getElementById("splash").style.backgroundImage = "url(https://www.hollywoodreporter.com/wp-content/uploads/2024/08/KATSEYE-Photo-Credit_-Cody-Critcheloe-1-e1724442108414.jpg?w=2000&h=1126&crop=1&resize=1000%2C563)";
