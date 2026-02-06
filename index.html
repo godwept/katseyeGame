@@ -174,6 +174,7 @@
             background-repeat: no-repeat;
             padding: 0;
             text-align: center;
+            background-image: url(https://www.hollywoodreporter.com/wp-content/uploads/2024/08/KATSEYE-Photo-Credit_-Cody-Critcheloe-1-e1724442108414.jpg?w=2000&h=1126&crop=1&resize=1000%2C563);
         }
 
             #splash::before {
@@ -531,6 +532,31 @@
                 font-weight: 600;
             }
 
+            #makeup-game .color-picker {
+                width: 100%;
+                height: 44px;
+                border-radius: 8px;
+                border: 2px solid rgba(255, 255, 255, 0.2);
+                background: rgba(255, 255, 255, 0.05);
+                cursor: pointer;
+                padding: 0;
+            }
+
+            #makeup-game .color-picker:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+            }
+
+            #makeup-game .color-picker::-webkit-color-swatch {
+                border: none;
+                border-radius: 6px;
+            }
+
+            #makeup-game .color-picker::-moz-color-swatch {
+                border: none;
+                border-radius: 6px;
+            }
+
             #makeup-game .nav-btn.active {
                 background: rgba(255, 79, 182, 0.2);
                 border-color: var(--accent);
@@ -558,6 +584,286 @@
             pointer-events: none;
             z-index: 1;
         }
+
+        /* Jigsaw Challenge styles */
+        #jigsaw-game {
+            padding: 16px;
+            gap: 12px;
+            text-align: center;
+        }
+
+        #jigsaw-game .jigsaw-setup {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            width: 100%;
+        }
+
+        #jigsaw-game .jigsaw-setup .diff-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        #jigsaw-game .jigsaw-setup .diff-btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: 2px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        #jigsaw-game .jigsaw-setup .diff-btn:hover {
+            border-color: var(--accent);
+            background: rgba(255,79,182,0.1);
+        }
+
+        #jigsaw-game .jigsaw-setup .diff-btn.selected {
+            border-color: var(--accent);
+            background: rgba(255,79,182,0.2);
+            box-shadow: 0 4px 15px rgba(255,79,182,0.3);
+        }
+
+        #jigsaw-game .jigsaw-play-area {
+            display: none;
+            width: 100%;
+            gap: 12px;
+        }
+
+        #jigsaw-game .jigsaw-play-area.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #jigsaw-game .jigsaw-hud {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 880px;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        #jigsaw-game .jigsaw-hud span {
+            color: var(--accent);
+        }
+
+        #jigsaw-game .jigsaw-workspace {
+            display: flex;
+            gap: 16px;
+            width: 100%;
+            max-width: 880px;
+            min-height: 430px;
+            align-items: flex-start;
+        }
+
+        #jigsaw-game .jigsaw-board-wrap {
+            position: relative;
+            flex-shrink: 0;
+            border-radius: 12px;
+            border: 2px solid rgba(255,255,255,0.15);
+            background: rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        #jigsaw-game .jigsaw-board-wrap .board-ghost {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            opacity: 0.12;
+            object-fit: fill;
+            pointer-events: none;
+        }
+
+        #jigsaw-game .jigsaw-board-wrap .placed-piece {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        #jigsaw-game .jigsaw-tray {
+            flex: 1;
+            min-height: 380px;
+            max-height: 430px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: var(--panel);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        #jigsaw-game .jigsaw-tray::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #jigsaw-game .jigsaw-tray::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+        }
+
+        #jigsaw-game .puzzle-piece {
+            cursor: grab;
+            transition: box-shadow 0.15s ease;
+            image-rendering: auto;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        #jigsaw-game .puzzle-piece:hover {
+            box-shadow: 0 0 12px rgba(255,79,182,0.4);
+        }
+
+        #jigsaw-game .puzzle-piece.dragging {
+            position: fixed;
+            z-index: 9999;
+            cursor: grabbing;
+            pointer-events: none;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+        }
+
+        #jigsaw-game .jigsaw-complete-msg {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        #jigsaw-game .jigsaw-complete-msg.show {
+            display: flex;
+        }
+
+        #jigsaw-game .jigsaw-complete-msg h2 {
+            color: var(--accent);
+        }
+
+        #jigsaw-game .jigsaw-preview-thumb {
+            width: 60px;
+            height: 80px;
+            border-radius: 8px;
+            border: 2px solid rgba(255,255,255,0.2);
+            object-fit: cover;
+            opacity: 0.7;
+            cursor: pointer;
+            transition: opacity 0.2s, border-color 0.2s;
+        }
+
+        #jigsaw-game .jigsaw-preview-thumb:hover {
+            opacity: 1;
+        }
+
+        #jigsaw-game .jigsaw-ref-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            z-index: 5;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(13,13,26,0.75);
+            color: #fff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            transition: transform 0.2s;
+        }
+
+        #jigsaw-game .jigsaw-ref-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Guess The Member styles */
+        #guess-game {
+            gap: 16px;
+        }
+
+            #guess-game .guess-image-wrapper {
+                width: min(320px, 80vw);
+                aspect-ratio: 3 / 4;
+                border-radius: 18px;
+                overflow: hidden;
+                border: 2px solid rgba(255, 255, 255, 0.15);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45);
+                background: rgba(255, 255, 255, 0.05);
+            }
+
+                #guess-game .guess-image-wrapper img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    transition: filter 0.25s linear;
+                    display: block;
+                }
+
+            #guess-game .choice-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 12px;
+                width: 100%;
+                max-width: 520px;
+            }
+
+            #guess-game .choice-btn {
+                border-radius: 10px;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                background: rgba(255, 255, 255, 0.05);
+                color: var(--text);
+                padding: 12px;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+            }
+
+                #guess-game .choice-btn:hover:not(:disabled) {
+                    transform: translateY(-2px);
+                    border-color: var(--accent);
+                }
+
+                #guess-game .choice-btn.correct {
+                    border-color: rgba(76, 207, 140, 0.8);
+                    background: rgba(76, 207, 140, 0.15);
+                }
+
+                #guess-game .choice-btn.wrong {
+                    border-color: rgba(255, 99, 132, 0.8);
+                    background: rgba(255, 99, 132, 0.15);
+                }
+
+                #guess-game .choice-btn:disabled {
+                    opacity: 0.6;
+                    cursor: not-allowed;
+                }
+
+            #guess-game .status-area {
+                min-height: 48px;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                align-items: center;
+                justify-content: center;
+                color: var(--muted);
+            }
+
+                #guess-game .status-area strong {
+                    color: var(--accent);
+                }
+
     </style>
 </head>
 <body>
@@ -626,6 +932,78 @@
             </div>
         </section>
 
+        <section id="guess-game" class="view" aria-live="polite">
+            <h2>Guess The Member</h2>
+            <p>Watch the image sharpen and pick the right Katseye member before time runs out.</p>
+            <div class="game-hud">
+                <div>Round: <span id="gg-round">1/5</span></div>
+                <div>Time Left: <span id="gg-timer">15</span>s</div>
+                <div>Score: <span id="gg-score">0</span></div>
+            </div>
+            <div class="guess-image-wrapper">
+                <img id="gg-portrait" alt="Mystery Katseye member" />
+            </div>
+            <div class="choice-grid" id="gg-choices" role="group" aria-label="Select the matching Katseye member"></div>
+            <div class="status-area">
+                <p id="gg-status-text"></p>
+                <button class="nav-btn secondary" id="gg-apply-image" style="display:none; border-radius: 8px;">Use On Player Card</button>
+            </div>
+            <div class="nav-row">
+                <button class="nav-btn secondary" data-route="game-select">Back to Games</button>
+                <button class="nav-btn" id="gg-next-round" disabled>Next Round</button>
+            </div>
+        </section>
+
+        <section id="jigsaw-game" class="view" aria-live="polite">
+            <h2>Jigsaw Challenge</h2>
+            <!-- Setup Panel -->
+            <div class="jigsaw-setup" id="jigsaw-setup">
+                <p>Complete 10 puzzles before time runs out!</p>
+                <div>
+                    <h3 style="margin:0 0 10px;font-size:0.95rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;">Character</h3>
+                    <div class="diff-group" id="jigsaw-char-group"></div>
+                </div>
+                <div>
+                    <h3 style="margin:0 0 10px;font-size:0.95rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;">Difficulty</h3>
+                    <div class="diff-group" id="jigsaw-diff-group">
+                        <button class="diff-btn selected" data-diff="easy">Easy<br><small style="color:var(--muted)">3 × 4</small></button>
+                        <button class="diff-btn" data-diff="medium">Medium<br><small style="color:var(--muted)">4 × 5</small></button>
+                        <button class="diff-btn" data-diff="hard">Hard<br><small style="color:var(--muted)">5 × 7</small></button>
+                    </div>
+                </div>
+                <button class="nav-btn" id="jigsaw-start-btn" disabled>Start Challenge</button>
+                <div class="nav-row">
+                    <button class="nav-btn secondary" data-route="game-select">Back to Games</button>
+                </div>
+            </div>
+
+            <!-- Play Area -->
+            <div class="jigsaw-play-area" id="jigsaw-play-area">
+                <div class="jigsaw-hud" id="jigsaw-hud">
+                    <div>Puzzle: <span id="jig-puzzle-num">1/10</span></div>
+                    <div>Time: <span id="jig-timer">10:00</span></div>
+                    <div>Placed: <span id="jig-placed">0/12</span></div>
+                </div>
+                <div class="jigsaw-workspace" id="jigsaw-workspace">
+                    <div class="jigsaw-board-wrap" id="jigsaw-board"></div>
+                    <div class="jigsaw-tray" id="jigsaw-tray"></div>
+                </div>
+                <div class="nav-row">
+                    <button class="nav-btn secondary" id="jigsaw-exit-btn">✕ Exit Puzzle</button>
+                </div>
+            </div>
+
+            <!-- Completion Message -->
+            <div class="jigsaw-complete-msg" id="jigsaw-complete-msg">
+                <h2 id="jigsaw-end-title">Challenge Complete!</h2>
+                <p id="jigsaw-end-text"></p>
+                <div class="nav-row">
+                    <button class="nav-btn secondary" data-route="game-select">Back to Games</button>
+                    <button class="nav-btn" id="jigsaw-restart-btn">Play Again</button>
+                </div>
+            </div>
+        </section>
+
         <section id="makeup-game" class="view" aria-live="polite">
             <h2>Makeup Studio</h2>
             <div class="makeup-container">
@@ -669,6 +1047,10 @@
                             <input type="range" id="brush-size" min="5" max="40" value="15" />
                             <div class="slider-value" id="brush-size-val">15px</div>
                         </div>
+                    </div>
+                    <div class="tool-section">
+                        <h3>Color</h3>
+                        <input type="color" id="color-picker" class="color-picker" value="#ff69b4" aria-label="Brush color" />
                     </div>
                     <div class="tool-section">
                         <h3>Zoom &amp; Pan</h3>
@@ -725,7 +1107,7 @@
 
         const views = document.querySelectorAll('.view');
         const menuViews = ['splash', 'player-select', 'game-select'];
-        const gameViews = ['zucchini-drop', 'memory-flip', 'makeup-game'];
+        const gameViews = ['zucchini-drop', 'memory-flip', 'makeup-game', 'guess-game', 'jigsaw-game'];
 
         // Try to start music on page load (for splash screen)
         bgMusic.play().then(() => {
@@ -771,6 +1153,20 @@
                 const mfScore = localStorage.getItem(`ks_hs_Memory Flip_${name}`) || 0;
                 const mfBadge = card.querySelector('.badge.mf');
                 if (mfBadge) mfBadge.innerHTML = `🧠 ${mfScore}`;
+
+                const guessScore = localStorage.getItem(`ks_hs_Guess The Member_${name}`) || 0;
+                const guessBadge = card.querySelector('.badge.gt');
+                if (guessBadge) guessBadge.innerHTML = `🔍 ${guessScore}`;
+
+                // Jigsaw Challenge Badge (show best difficulty completed)
+                const jgBadge = card.querySelector('.badge.jg');
+                if (jgBadge) {
+                    const jgEasy = parseInt(localStorage.getItem(`ks_hs_Jigsaw_${name}_easy`) || '0');
+                    const jgMed = parseInt(localStorage.getItem(`ks_hs_Jigsaw_${name}_medium`) || '0');
+                    const jgHard = parseInt(localStorage.getItem(`ks_hs_Jigsaw_${name}_hard`) || '0');
+                    const best = jgHard > 0 ? '★★★' : jgMed > 0 ? '★★' : jgEasy > 0 ? '★' : '0';
+                    jgBadge.innerHTML = `🧩 ${best}`;
+                }
             });
         }
 
@@ -782,6 +1178,53 @@
         const characterGrid = document.getElementById('characterGrid');
         const toGameSelect = document.getElementById('toGameSelect');
         let selectedCharacter = '';
+
+        const defaultCharacterImages = {
+            Megan: 'https://d.kpopstarz.com/en/full/1726882/katseye-megan.png?w=1600&h=1200&q=88&f=c3ced39ba954db40ee8704fed4fd1fea',
+            Yoonchae: 'https://phinf.wevpstatic.net/MjAyNTA2MTlfMjky/MDAxNzUwMjcxNDE2NDk0.svsKLEXReFlRP9iPkm6rceDTP1QMdCKfaBHdNoNG8qMg.SX6P1xE-bGSpf3T8vJRcFeOhLYLGIb_VjonmiWjVx9Ag.PNG/0511a24a-34d8-4d64-abc9-4d343e26669a.png?type=w670',
+            Manon: 'https://assets.teenvogue.com/photos/68c1592af1ede25ca68592d9/16:9/w_2560%2Cc_limit/2234222216',
+            Daniela: 'https://i0.wp.com/zaloramalaysiablog.wpcomstaging.com/wp-content/uploads/2025/06/snapins-ai_3633246668164069339-1.jpg?fit=1080%2C1350&ssl=1',
+            Lara: 'https://img.sbs.co.kr/newsnet/etv/upload/2025/03/25/30000982286_700.jpg',
+            Sophia: 'https://i.namu.wiki/i/TN-huHevy9Vmzh8FeMcAV48tFeRyPsoiY-ltUjjDAornSgMLV0hMxUQe73i6Dnw_ZTmRwZaFmHjOo0jrQCIf7g.webp'
+        };
+
+        function cardImageKey(name) {
+            return `ks_card_${name}`;
+        }
+
+        function readCookieValue(name) {
+            const match = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)'));
+            return match ? decodeURIComponent(match[1]) : null;
+        }
+
+        function writeCookieValue(name, value) {
+            document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=${60 * 60 * 24 * 365}`;
+        }
+
+        function getCharacterImageSource(name) {
+            const key = cardImageKey(name);
+            const stored = localStorage.getItem(key) || readCookieValue(key);
+            return stored || defaultCharacterImages[name] || '';
+        }
+
+        function setCharacterImageSource(name, url) {
+            if (!name || !url) return;
+            const key = cardImageKey(name);
+            localStorage.setItem(key, url);
+            writeCookieValue(key, url);
+            applyCharacterImages();
+            refreshMakeupOverlays();
+        }
+
+        function applyCharacterImages() {
+            characters.forEach(name => {
+                const el = document.getElementById(name.toLowerCase());
+                const src = getCharacterImageSource(name);
+                if (el && src) {
+                    el.style.backgroundImage = `url('${src}')`;
+                }
+            });
+        }
 
         function getSelectedCharacterImage() {
             if (!selectedCharacter) return '';
@@ -802,8 +1245,8 @@
                 <div class="badge-list">
                     <div class="badge zd" title="Zucchini Drop High Score">🥒 0</div>
                     <div class="badge mf" title="Memory Flip High Score">🧠 0</div>
-                    <!-- Placeholders for future games -->
-                    <div class="badge" title="Rhythm Tap (Coming Soon)">🎵 -</div>
+                    <div class="badge gt" title="Guess The Member High Score">🔍 0</div>
+                    <div class="badge jg" title="Jigsaw Challenge">🧩 0</div>
                 </div>
                 <h3>${name}</h3>
             `;
@@ -817,15 +1260,16 @@
             });
             characterGrid.appendChild(card);
         });
+        applyCharacterImages();
         
         refreshBadges();
 
         const games = [
             { name: 'Zucchini Drop', description: 'Tap falling zucchinis to catch them before they hit the stage.' },
-            { name: 'Rhythm Tap', description: 'Hit beats with the drummer to keep the groove tight.' },
+            { name: 'Guess The Member', description: 'Identify the member as their photo sharpens before the timer ends.' },
+            { name: 'Jigsaw Challenge', description: 'Solve 10-image puzzles for your favorite member before time runs out.' },
             { name: 'Makeup Studio', description: 'Customize your character with makeup and save your style.' },
-            { name: 'Memory Flip', description: 'Reveal Katseye icons and match pairs under pressure.' },
-            { name: 'Dance Sequence', description: 'Repeat flashing arrows to nail the choreography.' }
+            { name: 'Memory Flip', description: 'Reveal Katseye icons and match pairs under pressure.' }
         ];
 
         const gameGrid = document.getElementById('gameGrid');
@@ -856,6 +1300,11 @@
             } else if (selectedGame === 'Makeup Studio') {
                 showView('makeup-game');
                 startMakeupGame();
+            } else if (selectedGame === 'Guess The Member') {
+                showView('guess-game');
+                startGuessGame();
+            } else if (selectedGame === 'Jigsaw Challenge') {
+                showView('jigsaw-game'); initJigsawSetup();
             } else {
                 alert(selectedGame + ' is coming soon!');
             }
@@ -879,6 +1328,20 @@
             button.addEventListener('click', () => {
                 makeupMusic.pause();
                 makeupMusic.currentTime = 0;
+                showView(button.dataset.route);
+            });
+        });
+
+        document.querySelectorAll('#guess-game [data-route]').forEach(button => {
+            button.addEventListener('click', () => {
+                stopGuessGame();
+                showView(button.dataset.route);
+            });
+        });
+
+        document.querySelectorAll('#jigsaw-game [data-route]').forEach(button => {
+            button.addEventListener('click', () => {
+                stopJigsawGame();
                 showView(button.dataset.route);
             });
         });
@@ -1384,6 +1847,320 @@
 
         document.getElementById('mf-restart').addEventListener('click', startMemoryFlip);
 
+        // ── Guess The Member Game ─────────────────────────
+        const ggPortrait = document.getElementById('gg-portrait');
+        const ggChoices = document.getElementById('gg-choices');
+        const ggTimerEl = document.getElementById('gg-timer');
+        const ggScoreEl = document.getElementById('gg-score');
+        const ggRoundEl = document.getElementById('gg-round');
+        const ggStatusText = document.getElementById('gg-status-text');
+        const ggNextBtn = document.getElementById('gg-next-round');
+        const ggApplyBtn = document.getElementById('gg-apply-image');
+
+        const guessImagePool = [
+            { character: 'Daniela', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/daniela1.png' },
+            { character: 'Daniela', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/daniela2.png' },
+            { character: 'Daniela', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/daniela3.png' },
+            { character: 'Daniela', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/daniela4.png' },
+            { character: 'Daniela', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/daniela5.png' },
+            { character: 'Daniela', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/daniela6.png' },
+            { character: 'Daniela', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/daniela7.png' },
+            { character: 'Daniela', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/daniela8.png' },
+            { character: 'Daniela', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/daniela9.png' },
+            { character: 'Daniela', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/daniela10.png' },
+
+            // Manon
+            { character: 'Manon', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/manon1.png' },
+            { character: 'Manon', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/manon2.png' },
+            { character: 'Manon', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/manon3.png' },
+            { character: 'Manon', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/manon4.png' },
+            { character: 'Manon', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/manon5.png' },
+            { character: 'Manon', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/manon6.png' },
+            { character: 'Manon', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/manon7.png' },
+            { character: 'Manon', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/manon8.png' },
+            { character: 'Manon', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/manon9.png' },
+            { character: 'Manon', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/manon10.png' },
+
+            // Yoonchae
+            { character: 'Yoonchae', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/yoonchae1.png' },
+            { character: 'Yoonchae', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/yoonchae2.png' },
+            { character: 'Yoonchae', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/yoonchae3.png' },
+            { character: 'Yoonchae', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/yoonchae4.png' },
+            { character: 'Yoonchae', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/yoonchae5.png' },
+            { character: 'Yoonchae', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/yoonchae6.png' },
+            { character: 'Yoonchae', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/yoonchae7.png' },
+            { character: 'Yoonchae', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/yoonchae8.png' },
+            { character: 'Yoonchae', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/yoonchae9.png' },
+            { character: 'Yoonchae', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/yoonchae10.png' },
+
+            // Lara
+            { character: 'Lara', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/lara1.png' },
+            { character: 'Lara', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/lara2.png' },
+            { character: 'Lara', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/lara3.png' },
+            { character: 'Lara', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/lara4.png' },
+            { character: 'Lara', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/lara5.png' },
+            { character: 'Lara', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/lara6.png' },
+            { character: 'Lara', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/lara7.png' },
+            { character: 'Lara', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/lara8.png' },
+            { character: 'Lara', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/lara9.png' },
+            { character: 'Lara', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/lara10.png' },
+
+            // Sophia
+            { character: 'Sophia', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/sophia1.png' },
+            { character: 'Sophia', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/sophia2.png' },
+            { character: 'Sophia', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/sophia3.png' },
+            { character: 'Sophia', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/sophia4.png' },
+            { character: 'Sophia', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/sophia5.png' },
+            { character: 'Sophia', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/sophia6.png' },
+            { character: 'Sophia', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/sophia7.png' },
+            { character: 'Sophia', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/sophia8.png' },
+            { character: 'Sophia', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/sophia9.png' },
+            { character: 'Sophia', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/sophia10.png' },
+
+            // Megan
+            { character: 'Megan', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/megan1.png' },
+            { character: 'Megan', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/megan2.png' },
+            { character: 'Megan', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/megan3.png' },
+            { character: 'Megan', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/megan4.png' },
+            { character: 'Megan', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/megan5.png' },
+            { character: 'Megan', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/megan6.png' },
+            { character: 'Megan', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/megan7.png' },
+            { character: 'Megan', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/megan8.png' },
+            { character: 'Megan', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/megan9.png' },
+            { character: 'Megan', image: 'https://github.com/godwept/katseyeGame/raw/refs/heads/main/megan10.png' }
+        ];
+
+        const guessGameConfig = {
+            roundTime: 15,
+            wrongPenalty: 10,
+            maxRounds: 5,
+            blurStart: 26,
+            blurStep: 0.6,
+            blurInterval: 200
+        };
+
+        const guessGameState = {
+            round: 0,
+            maxRounds: 0,
+            score: 0,
+            answered: false,
+            roundFinished: false,
+            showingSummary: false,
+            timerId: null,
+            blurId: null,
+            timeRemaining: 0,
+            currentEntry: null,
+            usedIndices: new Set()
+        };
+
+        function startGuessGame() {
+            if (guessImagePool.length < 4) {
+                ggStatusText.textContent = 'Add more Guess The Member photos to start playing.';
+                ggChoices.innerHTML = '';
+                ggPortrait.style.filter = 'blur(0px)';
+                ggNextBtn.disabled = true;
+                return;
+            }
+
+            stopGuessGame();
+            guessGameState.round = 0;
+            guessGameState.score = 0;
+            guessGameState.usedIndices = new Set();
+            guessGameState.maxRounds = Math.min(guessGameConfig.maxRounds, guessImagePool.length);
+            guessGameState.showingSummary = false;
+            ggScoreEl.textContent = '0';
+            ggStatusText.textContent = '';
+            ggApplyBtn.style.display = 'none';
+            ggApplyBtn.disabled = false;
+            ggApplyBtn.textContent = 'Use On Player Card';
+            ggNextBtn.textContent = 'Next Round';
+            ggNextBtn.disabled = true;
+            prepareGuessRound();
+        }
+
+        function stopGuessGame() {
+            if (guessGameState.timerId) {
+                clearInterval(guessGameState.timerId);
+                guessGameState.timerId = null;
+            }
+            if (guessGameState.blurId) {
+                clearInterval(guessGameState.blurId);
+                guessGameState.blurId = null;
+            }
+        }
+
+        function prepareGuessRound() {
+            stopGuessGame();
+            if (guessGameState.round >= guessGameState.maxRounds) {
+                showGuessSummary();
+                return;
+            }
+
+            guessGameState.round++;
+            guessGameState.answered = false;
+            guessGameState.roundFinished = false;
+            guessGameState.showingSummary = false;
+            ggApplyBtn.style.display = 'none';
+            ggApplyBtn.disabled = false;
+            ggApplyBtn.textContent = 'Use On Player Card';
+            ggStatusText.textContent = '';
+            ggNextBtn.disabled = true;
+            ggNextBtn.textContent = guessGameState.round >= guessGameState.maxRounds ? 'Show Results' : 'Next Round';
+
+            if (guessGameState.round > guessGameState.maxRounds) {
+                showGuessSummary();
+                return;
+            }
+
+            const roundLabel = Math.min(guessGameState.round, guessGameState.maxRounds);
+            ggRoundEl.textContent = `${roundLabel}/${guessGameState.maxRounds}`;
+
+            guessGameState.currentEntry = pickGuessEntry();
+            if (!guessGameState.currentEntry) {
+                showGuessSummary();
+                return;
+            }
+
+            ggPortrait.src = guessGameState.currentEntry.image;
+            ggPortrait.style.filter = `blur(${guessGameConfig.blurStart}px)`;
+            buildGuessChoices(guessGameState.currentEntry.character);
+            guessGameState.timeRemaining = guessGameConfig.roundTime;
+            ggTimerEl.textContent = guessGameState.timeRemaining.toString();
+            guessGameState.timerId = setInterval(() => {
+                guessGameState.timeRemaining = Math.max(0, guessGameState.timeRemaining - 1);
+                ggTimerEl.textContent = guessGameState.timeRemaining.toString();
+                if (guessGameState.timeRemaining <= 0) {
+                    endGuessRound(false, `${guessGameState.currentEntry.character} was the answer.`);
+                }
+            }, 1000);
+
+            let blurLevel = guessGameConfig.blurStart;
+            guessGameState.blurId = setInterval(() => {
+                blurLevel = Math.max(0, blurLevel - guessGameConfig.blurStep);
+                ggPortrait.style.filter = `blur(${blurLevel}px)`;
+                if (blurLevel <= 0) {
+                    clearInterval(guessGameState.blurId);
+                    guessGameState.blurId = null;
+                }
+            }, guessGameConfig.blurInterval);
+        }
+
+        function pickGuessEntry() {
+            if (guessGameState.usedIndices.size >= guessImagePool.length) {
+                guessGameState.usedIndices.clear();
+            }
+            const available = guessImagePool
+                .map((entry, index) => ({ entry, index }))
+                .filter(item => !guessGameState.usedIndices.has(item.index));
+            if (available.length === 0) {
+                return null;
+            }
+            const choice = available[Math.floor(Math.random() * available.length)];
+            guessGameState.usedIndices.add(choice.index);
+            return choice.entry;
+        }
+
+        function buildGuessChoices(correctName) {
+            ggChoices.innerHTML = '';
+            const options = new Set([correctName]);
+            const pool = [...characters];
+            while (options.size < 4 && pool.length) {
+                const candidate = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
+                options.add(candidate);
+            }
+            const shuffled = Array.from(options).sort(() => Math.random() - 0.5);
+            shuffled.forEach(name => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'choice-btn';
+                btn.textContent = name;
+                btn.addEventListener('click', () => handleGuessSelection(name, btn));
+                ggChoices.appendChild(btn);
+            });
+        }
+
+        function handleGuessSelection(name, button) {
+            if (guessGameState.answered || guessGameState.roundFinished) return;
+            if (!guessGameState.currentEntry) return;
+
+            if (name === guessGameState.currentEntry.character) {
+                guessGameState.answered = true;
+                button.classList.add('correct');
+                const roundBonus = 50 + Math.ceil(guessGameState.timeRemaining * 5);
+                guessGameState.score += roundBonus;
+                ggScoreEl.textContent = guessGameState.score.toString();
+                ggStatusText.innerHTML = `<strong>Correct!</strong> +${roundBonus} points.`;
+                ggPortrait.style.filter = 'blur(0px)';
+                endGuessRound(true);
+                ggApplyBtn.style.display = 'inline-flex';
+                ggApplyBtn.disabled = false;
+            } else {
+                button.classList.add('wrong');
+                button.disabled = true;
+                guessGameState.score = Math.max(0, guessGameState.score - guessGameConfig.wrongPenalty);
+                ggScoreEl.textContent = guessGameState.score.toString();
+                ggStatusText.textContent = 'Not quite! Try another name.';
+            }
+        }
+
+        function endGuessRound(correct, message = '') {
+            if (guessGameState.roundFinished) return;
+            stopGuessGame();
+            guessGameState.roundFinished = true;
+            Array.from(ggChoices.querySelectorAll('button')).forEach(btn => btn.disabled = true);
+            if (!correct && guessGameState.currentEntry) {
+                ggStatusText.textContent = message || `Time's up! It was ${guessGameState.currentEntry.character}.`;
+            }
+            ggNextBtn.disabled = false;
+            ggNextBtn.textContent = guessGameState.round >= guessGameState.maxRounds ? 'Show Results' : 'Next Round';
+        }
+
+        function showGuessSummary() {
+            stopGuessGame();
+            guessGameState.roundFinished = true;
+            guessGameState.showingSummary = true;
+            Array.from(ggChoices.querySelectorAll('button')).forEach(btn => btn.disabled = true);
+            ggStatusText.innerHTML = `<strong>Final score: ${guessGameState.score}</strong>`;
+            ggApplyBtn.style.display = 'none';
+            ggNextBtn.disabled = false;
+            ggNextBtn.textContent = 'Play Again';
+            saveGuessHighScore();
+            refreshBadges();
+        }
+
+        function saveGuessHighScore() {
+            if (!selectedCharacter) return;
+            const key = `ks_hs_Guess The Member_${selectedCharacter}`;
+            const current = parseInt(localStorage.getItem(key) || '0', 10);
+            if (guessGameState.score > current) {
+                localStorage.setItem(key, guessGameState.score.toString());
+            }
+        }
+
+        if (ggNextBtn) {
+            ggNextBtn.addEventListener('click', () => {
+                if (guessGameState.showingSummary) {
+                    startGuessGame();
+                    return;
+                }
+                if (!guessGameState.roundFinished) return;
+                if (guessGameState.round >= guessGameState.maxRounds) {
+                    showGuessSummary();
+                } else {
+                    prepareGuessRound();
+                }
+            });
+        }
+
+        if (ggApplyBtn) {
+            ggApplyBtn.addEventListener('click', () => {
+                if (!guessGameState.currentEntry) return;
+                setCharacterImageSource(guessGameState.currentEntry.character, guessGameState.currentEntry.image);
+                ggApplyBtn.textContent = 'Applied!';
+                ggApplyBtn.disabled = true;
+            });
+        }
+
         // ── Makeup Game ─────────────────────────────────────
         const makeupCanvas = document.getElementById('makeup-canvas');
         const makeupCtx = makeupCanvas.getContext('2d');
@@ -1398,25 +2175,35 @@
         const panToggleBtn = document.getElementById('toggle-pan');
         const resetZoomBtn = document.getElementById('reset-zoom');
         const undoBtn = document.getElementById('makeup-undo');
+        const colorPicker = document.getElementById('color-picker');
 
         const makeupTools = {
-            blush: { color: 'rgba(255, 105, 180, 0.4)', name: 'Blush' },
-            lipstick: { color: 'rgba(220, 20, 60, 0.7)', name: 'Lipstick' },
-            mascara: { color: 'rgba(0, 0, 0, 0.8)', name: 'Mascara' },
-            eyeliner: { color: 'rgba(0, 0, 0, 0.9)', name: 'Eyeliner' },
-            eyeshadow: { color: 'rgba(138, 43, 226, 0.5)', name: 'Eyeshadow' },
-            eraser: { color: 'eraser', name: 'Eraser' }
+            blush: { name: 'Blush', defaultColor: '#ff69b4', alpha: 0.4 },
+            lipstick: { name: 'Lipstick', defaultColor: '#dc143c', alpha: 0.7 },
+            mascara: { name: 'Mascara', defaultColor: '#111111', alpha: 0.85, mode: 'stamp' },
+            eyeliner: { name: 'Eyeliner', defaultColor: '#000000', alpha: 0.9 },
+            eyeshadow: { name: 'Eyeshadow', defaultColor: '#8a2be2', alpha: 0.5 },
+            eraser: { name: 'Eraser' }
         };
+
+        const toolColorState = Object.keys(makeupTools).reduce((acc, key) => {
+            if (makeupTools[key].defaultColor) {
+                acc[key] = makeupTools[key].defaultColor;
+            }
+            return acc;
+        }, {});
 
         let makeupState = {
             currentTool: 'blush',
             brushSize: 15,
             isDrawing: false,
+            isStamping: false,
             strokes: [],
             currentStroke: null,
             characterImg: null,
             imgDrawRect: { x: 0, y: 0, w: 400, h: 533 }, // Where the image is actually drawn
-            activePointerId: null
+            activePointerId: null,
+            lastStampPos: null
         };
 
         const makeupView = {
@@ -1431,6 +2218,54 @@
         const activePointers = new Map();
         let panReference = null;
         let pinchData = null;
+
+        function hexToRgb(hex) {
+            if (!hex) return { r: 255, g: 255, b: 255 };
+            let normalized = hex.replace('#', '');
+            if (normalized.length === 3) {
+                normalized = normalized.split('').map(ch => ch + ch).join('');
+            }
+            if (normalized.length !== 6 || Number.isNaN(parseInt(normalized, 16))) {
+                return { r: 255, g: 255, b: 255 };
+            }
+            const value = parseInt(normalized, 16);
+            return {
+                r: (value >> 16) & 255,
+                g: (value >> 8) & 255,
+                b: value & 255
+            };
+        }
+
+        function buildRgba(hex, alpha = 1) {
+            const { r, g, b } = hexToRgb(hex);
+            return `rgba(${r},${g},${b},${alpha})`;
+        }
+
+        function getToolColor(tool) {
+            if (tool === 'eraser') {
+                return 'rgba(255,255,255,1)';
+            }
+            const toolConfig = makeupTools[tool];
+            if (!toolConfig) {
+                return 'rgba(255,255,255,1)';
+            }
+            const hex = toolColorState[tool] || toolConfig.defaultColor || '#ffffff';
+            const alpha = typeof toolConfig.alpha === 'number' ? toolConfig.alpha : 1;
+            return buildRgba(hex, alpha);
+        }
+
+        function syncColorPicker() {
+            if (!colorPicker) return;
+            const tool = makeupState.currentTool;
+            if (tool === 'eraser') {
+                colorPicker.disabled = true;
+                colorPicker.value = '#ffffff';
+            } else {
+                colorPicker.disabled = false;
+                const hex = toolColorState[tool] || makeupTools[tool]?.defaultColor || '#ffffff';
+                colorPicker.value = hex;
+            }
+        }
 
         brushSizeSlider.addEventListener('input', (e) => {
             makeupState.brushSize = parseInt(e.target.value);
@@ -1454,12 +2289,27 @@
             btn.addEventListener('click', () => {
                 const tool = btn.dataset.tool;
                 if (tool) {
+                    finishActiveStroke();
+                    finishMascaraStamping();
                     makeupState.currentTool = tool;
                     document.querySelectorAll('#makeup-game .tool-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
+                    syncColorPicker();
                 }
             });
         });
+
+        if (colorPicker) {
+            colorPicker.addEventListener('input', (e) => {
+                const tool = makeupState.currentTool;
+                if (!tool || tool === 'eraser') return;
+                toolColorState[tool] = e.target.value;
+                if (makeupState.isDrawing && makeupState.currentStroke && makeupState.currentStroke.tool === tool) {
+                    makeupState.currentStroke.color = getToolColor(tool);
+                    redrawMakeupCanvas(makeupState.currentStroke);
+                }
+            });
+        }
 
         document.getElementById('makeup-clear').addEventListener('click', () => {
             if (confirm('Clear all makeup? This cannot be undone.')) {
@@ -1488,15 +2338,18 @@
         function startMakeupGame() {
             makeupState.strokes = [];
             makeupState.isDrawing = false;
+            makeupState.isStamping = false;
             makeupState.currentStroke = null;
             makeupState.characterImg = null;
             makeupState.activePointerId = null;
+            makeupState.lastStampPos = null;
             activePointers.clear();
             panReference = null;
             pinchData = null;
             makeupView.panMode = false;
             updatePanButton();
             resetMakeupView();
+            syncColorPicker();
             
             // Start game music
             makeupMusic.currentTime = 0;
@@ -1616,7 +2469,12 @@
         }
 
         function drawStroke(stroke, ctx = makeupLayerCtx) {
-            if (stroke.points.length < 2) return;
+            if (stroke.kind === 'mascara') {
+                drawMascaraStamp(stroke, ctx);
+                return;
+            }
+
+            if (!stroke.points || stroke.points.length < 2) return;
 
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
@@ -1638,6 +2496,53 @@
             ctx.stroke();
 
             ctx.globalCompositeOperation = 'source-over';
+        }
+
+        function drawMascaraStamp(stamp, ctx = makeupLayerCtx) {
+            const color = stamp.color || getToolColor('mascara');
+            const lashWidth = Math.max(1, stamp.size * 0.12);
+            const arcWidth = stamp.size * 2.2;
+            const arcHeight = stamp.size * 0.9;
+            ctx.save();
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.translate(stamp.x, stamp.y);
+            ctx.strokeStyle = color;
+
+            const start = { x: -arcWidth / 2, y: 0 };
+            const control = { x: 0, y: -arcHeight };
+            const end = { x: arcWidth / 2, y: 0 };
+
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.lineWidth = Math.max(1.2, stamp.size * 0.18);
+            ctx.beginPath();
+            ctx.moveTo(start.x, start.y);
+            ctx.quadraticCurveTo(control.x, control.y, end.x, end.y);
+            ctx.stroke();
+
+            ctx.lineWidth = lashWidth;
+            const lashCount = 6;
+            const lashLength = stamp.size * 0.9;
+            for (let i = 1; i < lashCount; i++) {
+                const t = i / lashCount;
+                const px = (1 - t) * (1 - t) * start.x + 2 * (1 - t) * t * control.x + t * t * end.x;
+                const py = (1 - t) * (1 - t) * start.y + 2 * (1 - t) * t * control.y + t * t * end.y;
+                const dx = 2 * (1 - t) * (control.x - start.x) + 2 * t * (end.x - control.x);
+                const dy = 2 * (1 - t) * (control.y - start.y) + 2 * t * (end.y - control.y);
+                const len = Math.hypot(dx, dy) || 1;
+                let nx = -dy / len;
+                let ny = dx / len;
+                if (ny > 0) {
+                    nx *= -1;
+                    ny *= -1;
+                }
+                ctx.beginPath();
+                ctx.moveTo(px, py);
+                ctx.lineTo(px + nx * lashLength, py + ny * lashLength);
+                ctx.stroke();
+            }
+
+            ctx.restore();
         }
 
         function getMakeupCanvasCoords(e) {
@@ -1735,13 +2640,14 @@
 
         function startStroke(e) {
             const tool = makeupState.currentTool;
-            const toolData = makeupTools[tool];
+            if (tool === 'mascara') return;
             makeupState.isDrawing = true;
             makeupState.activePointerId = e.pointerId;
             const pos = getMakeupCanvasCoords(e);
             makeupState.currentStroke = {
                 tool: tool,
-                color: tool === 'eraser' ? 'rgba(255,255,255,1)' : toolData.color,
+                kind: 'path',
+                color: getToolColor(tool),
                 size: makeupState.brushSize,
                 points: [pos]
             };
@@ -1749,12 +2655,55 @@
 
         function finishActiveStroke() {
             if (makeupState.currentStroke) {
-                makeupState.strokes.push(makeupState.currentStroke);
+                if (makeupState.currentStroke.points && makeupState.currentStroke.points.length >= 2) {
+                    makeupState.strokes.push(makeupState.currentStroke);
+                    updateUndoButton();
+                }
                 makeupState.currentStroke = null;
                 redrawMakeupCanvas();
-                updateUndoButton();
             }
             makeupState.isDrawing = false;
+            makeupState.activePointerId = null;
+        }
+
+        function placeMascaraStamp(pos) {
+            const stamp = {
+                kind: 'mascara',
+                tool: 'mascara',
+                color: getToolColor('mascara'),
+                size: makeupState.brushSize,
+                x: pos.x,
+                y: pos.y
+            };
+            makeupState.strokes.push(stamp);
+            redrawMakeupCanvas();
+            updateUndoButton();
+        }
+
+        function startMascaraStamping(e) {
+            makeupState.isStamping = true;
+            makeupState.activePointerId = e.pointerId;
+            const pos = getMakeupCanvasCoords(e);
+            makeupState.lastStampPos = pos;
+            placeMascaraStamp(pos);
+        }
+
+        function updateMascaraStamping(e) {
+            if (!makeupState.isStamping || makeupState.activePointerId !== e.pointerId) return;
+            const pos = getMakeupCanvasCoords(e);
+            const last = makeupState.lastStampPos;
+            const threshold = Math.max(5, makeupState.brushSize * 0.8);
+            if (!last || Math.hypot(pos.x - last.x, pos.y - last.y) >= threshold) {
+                makeupState.lastStampPos = pos;
+                placeMascaraStamp(pos);
+            }
+        }
+
+        function finishMascaraStamping(e) {
+            if (!makeupState.isStamping) return;
+            if (e && makeupState.activePointerId !== e.pointerId) return;
+            makeupState.isStamping = false;
+            makeupState.lastStampPos = null;
             makeupState.activePointerId = null;
         }
 
@@ -1828,6 +2777,7 @@
 
             if (activePointers.size >= 2) {
                 finishActiveStroke();
+                finishMascaraStamping();
                 panReference = null;
                 pinchData = null;
                 return;
@@ -1835,7 +2785,13 @@
 
             if (makeupView.panMode || e.button === 1 || e.ctrlKey) {
                 finishActiveStroke();
+                finishMascaraStamping();
                 startPan(e);
+                return;
+            }
+
+            if (makeupState.currentTool === 'mascara') {
+                startMascaraStamping(e);
                 return;
             }
 
@@ -1857,6 +2813,11 @@
                 return;
             }
 
+            if (makeupState.currentTool === 'mascara' && makeupState.isStamping && makeupState.activePointerId === e.pointerId) {
+                updateMascaraStamping(e);
+                return;
+            }
+
             if (!makeupView.panMode && makeupState.isDrawing && makeupState.currentStroke && makeupState.activePointerId === e.pointerId) {
                 const pos = getMakeupCanvasCoords(e);
                 makeupState.currentStroke.points.push(pos);
@@ -1867,6 +2828,10 @@
         function handleMakeupPointerUp(e) {
             if (panReference && panReference.pointerId === e.pointerId) {
                 endPan(e);
+            }
+
+            if (makeupState.currentTool === 'mascara' && makeupState.isStamping && makeupState.activePointerId === e.pointerId) {
+                finishMascaraStamping(e);
             }
 
             if (makeupState.isDrawing && makeupState.activePointerId === e.pointerId) {
@@ -1895,6 +2860,7 @@
         updateZoomUI();
         updatePanButton();
         updateUndoButton();
+        syncColorPicker();
 
         // Render makeup overlays on character cards
         function refreshMakeupOverlays() {
@@ -1988,7 +2954,19 @@
 
                     // Replay strokes with coordinate transformation
                     strokes.forEach(stroke => {
-                        if (stroke.points.length < 2) return;
+                        if (stroke.kind === 'mascara') {
+                            const scaleAvg = (scaleX + scaleY) / 2;
+                            const transformedStamp = {
+                                ...stroke,
+                                x: stroke.x * scaleX + offsetX,
+                                y: stroke.y * scaleY + offsetY,
+                                size: stroke.size * scaleAvg
+                            };
+                            drawMascaraStamp(transformedStamp, ctx);
+                            return;
+                        }
+
+                        if (!stroke.points || stroke.points.length < 2) return;
 
                         ctx.lineCap = 'round';
                         ctx.lineJoin = 'round';
@@ -2022,15 +3000,722 @@
                 img.src = match[1];
             });
         }
-    </script>
-    <script>
-        document.getElementById("splash").style.backgroundImage = "url(https://www.hollywoodreporter.com/wp-content/uploads/2024/08/KATSEYE-Photo-Credit_-Cody-Critcheloe-1-e1724442108414.jpg?w=2000&h=1126&crop=1&resize=1000%2C563)";
-        document.getElementById("megan").style.backgroundImage = "url(https://d.kpopstarz.com/en/full/1726882/katseye-megan.png?w=1600&h=1200&q=88&f=c3ced39ba954db40ee8704fed4fd1fea)";
-        document.getElementById("yoonchae").style.backgroundImage = "url(https://phinf.wevpstatic.net/MjAyNTA2MTlfMjky/MDAxNzUwMjcxNDE2NDk0.svsKLEXReFlRP9iPkm6rceDTP1QMdCKfaBHdNoNG8qMg.SX6P1xE-bGSpf3T8vJRcFeOhLYLGIb_VjonmiWjVx9Ag.PNG/0511a24a-34d8-4d64-abc9-4d343e26669a.png?type=w670)";
-        document.getElementById("manon").style.backgroundImage = "url(https://assets.teenvogue.com/photos/68c1592af1ede25ca68592d9/16:9/w_2560%2Cc_limit/2234222216)";
-        document.getElementById("daniela").style.backgroundImage = "url(https://i0.wp.com/zaloramalaysiablog.wpcomstaging.com/wp-content/uploads/2025/06/snapins-ai_3633246668164069339-1.jpg?fit=1080%2C1350&ssl=1)";
-        document.getElementById("lara").style.backgroundImage = "url(https://img.sbs.co.kr/newsnet/etv/upload/2025/03/25/30000982286_700.jpg)";
-        document.getElementById("sophia").style.backgroundImage = "url(https://i.namu.wiki/i/TN-huHevy9Vmzh8FeMcAV48tFeRyPsoiY-ltUjjDAornSgMLV0hMxUQe73i6Dnw_ZTmRwZaFmHjOo0jrQCIf7g.webp)";
+        // ── Jigsaw Challenge Game ─────────────────────────
+        let jigsawTimerId = null;
+        let jigsawState = null;
+
+        const difficultyConfigs = {
+            easy:   { cols: 3, rows: 4, label: '3 × 4' },
+            medium: { cols: 4, rows: 5, label: '4 × 5' },
+            hard:   { cols: 5, rows: 7, label: '5 × 7' }
+        };
+
+        function stopJigsawGame() {
+            if (jigsawTimerId) { clearInterval(jigsawTimerId); jigsawTimerId = null; }
+            jigsawState = null;
+        }
+
+        function initJigsawSetup() {
+            stopJigsawGame();
+            const setup = document.getElementById('jigsaw-setup');
+            const playArea = document.getElementById('jigsaw-play-area');
+            const completeMsg = document.getElementById('jigsaw-complete-msg');
+            setup.style.display = '';
+            playArea.classList.remove('active');
+            completeMsg.classList.remove('show');
+
+            // Character buttons
+            const charGroup = document.getElementById('jigsaw-char-group');
+            charGroup.innerHTML = '';
+            let jigsawChar = '';
+            const startBtn = document.getElementById('jigsaw-start-btn');
+            startBtn.disabled = true;
+            characters.forEach(name => {
+                const btn = document.createElement('button');
+                btn.className = 'diff-btn';
+                btn.textContent = name;
+                btn.onclick = () => {
+                    charGroup.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    jigsawChar = name;
+                    startBtn.disabled = false;
+                };
+                charGroup.appendChild(btn);
+            });
+
+            // Difficulty buttons
+            const diffGroup = document.getElementById('jigsaw-diff-group');
+            let selectedDiff = 'easy';
+            diffGroup.querySelectorAll('.diff-btn').forEach(btn => {
+                btn.onclick = () => {
+                    diffGroup.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    selectedDiff = btn.dataset.diff;
+                };
+            });
+
+            startBtn.onclick = () => {
+                if (!jigsawChar) return;
+                setup.style.display = 'none';
+                startJigsawChallenge(selectedDiff, jigsawChar);
+            };
+
+            document.getElementById('jigsaw-restart-btn').onclick = () => {
+                completeMsg.classList.remove('show');
+                setup.style.display = '';
+            };
+
+            document.getElementById('jigsaw-exit-btn').onclick = () => {
+                stopJigsawGame();
+                playArea.classList.remove('active');
+                setup.style.display = '';
+            };
+        }
+
+        /* ────────────────────────────────────────────────
+         *  CORE JIGSAW PIECE SHAPE — CLASSIC INTERLOCKING
+         *  Each edge is drawn with cubic Bézier curves
+         *  producing a mushroom-shaped tab / slot.
+         * ──────────────────────────────────────────────── */
+
+        /**
+         * Draw one edge of a jigsaw piece.
+         *
+         * @param {CanvasRenderingContext2D} ctx
+         * @param {number} x0  Start x
+         * @param {number} y0  Start y
+         * @param {number} x1  End x
+         * @param {number} y1  End y
+         * @param {number} tab  0 = flat, +1 = tab outward (left of direction), −1 = slot
+         *
+         * The curve is defined so that when piece A has tab = +1 on its right edge
+         * and piece B has tab = −1 on its left edge, the shapes interlock perfectly
+         * because the perpendicular direction flips.
+         */
+        function drawJigsawEdge(ctx, x0, y0, x1, y1, tab) {
+            if (tab === 0) {
+                ctx.lineTo(x1, y1);
+                return;
+            }
+
+            const dx = x1 - x0;
+            const dy = y1 - y0;
+            const len = Math.sqrt(dx * dx + dy * dy);
+
+            // Unit along edge and perpendicular (outward = left of direction * tab sign)
+            const ux = dx / len, uy = dy / len;
+            const px = -uy * tab, py = ux * tab;
+            const e = len;
+
+            // ── Shape parameters (as fractions of edge length) ──
+            const neckStart = 0.34;
+            const neckEnd   = 0.66;
+            const tabH      = 0.22;    // how far the tab protrudes
+            const bulge     = 0.07;    // extra width of the bulb vs neck
+
+            // Helper: point along the edge at fraction t, offset d perpendicular
+            const pt = (t, d) => ({
+                x: x0 + ux * e * t + px * e * d,
+                y: y0 + uy * e * t + py * e * d
+            });
+
+            // ── Trace the edge ──
+
+            // Straight to neck start
+            const ns = pt(neckStart, 0);
+            ctx.lineTo(ns.x, ns.y);
+
+            // Neck indent → left side of bulb → tip
+            const c1 = pt(neckStart, 0.015);
+            const c2 = pt(neckStart - bulge, tabH);
+            const tip = pt(0.5, tabH);
+            ctx.bezierCurveTo(c1.x, c1.y, c2.x, c2.y, tip.x, tip.y);
+
+            // Tip → right side of bulb → neck end
+            const c3 = pt(neckEnd + bulge, tabH);
+            const c4 = pt(neckEnd, 0.015);
+            const ne = pt(neckEnd, 0);
+            ctx.bezierCurveTo(c3.x, c3.y, c4.x, c4.y, ne.x, ne.y);
+
+            // Straight to edge end
+            ctx.lineTo(x1, y1);
+        }
+
+        /**
+         * Build the full clip path for a single jigsaw piece and return it as a Path2D.
+         *
+         * edges = { top, right, bottom, left }  — each is 0, +1, or −1
+         * cellW, cellH  — base cell size
+         * tabSize       — maximum tab protrusion in pixels
+         * ox, oy        — origin offset (= tabSize) so the cell sits at (ox, oy) in piece canvas
+         */
+        function buildPiecePath(edges, cellW, cellH, ox, oy) {
+            const p = new Path2D();
+
+            // Start at top-left of cell
+            p.moveTo(ox, oy);
+
+            // Top edge: left → right
+            drawJigsawEdge(p, ox, oy, ox + cellW, oy, edges.top);
+
+            // Right edge: top → bottom
+            drawJigsawEdge(p, ox + cellW, oy, ox + cellW, oy + cellH, edges.right);
+
+            // Bottom edge: right → left
+            drawJigsawEdge(p, ox + cellW, oy + cellH, ox, oy + cellH, edges.bottom);
+
+            // Left edge: bottom → top
+            drawJigsawEdge(p, ox, oy + cellH, ox, oy, edges.left);
+
+            p.closePath();
+            return p;
+        }
+
+        // Attach bezier-drawing ability to Path2D
+        // (Path2D doesn't have lineTo/bezierCurveTo natively on all browsers as
+        //  standalone, but it does! — confirmed in Chrome, Firefox, Safari)
+
+        /* ────────────────────────────────────────────────
+         *  EDGE MAP GENERATOR
+         *  Pre-generates which edges are tab (+1) or slot (−1).
+         *  Edges are stored for horizontal (between rows) and vertical (between cols).
+         *  Border edges are always 0 (flat).
+         * ──────────────────────────────────────────────── */
+        function generateEdgeMap(rows, cols) {
+            // hEdges[r][c] = tab type for the bottom edge of cell (r, c)
+            //                which is also the top edge of cell (r+1, c)
+            // Cell (r, c) bottom = hEdges[r][c], top = hEdges[r-1][c] negated
+            const hEdges = [];
+            for (let r = 0; r < rows - 1; r++) {
+                hEdges[r] = [];
+                for (let c = 0; c < cols; c++) {
+                    hEdges[r][c] = Math.random() < 0.5 ? 1 : -1;
+                }
+            }
+
+            // vEdges[r][c] = tab type for the right edge of cell (r, c)
+            //                which is also the left edge of cell (r, c+1)
+            const vEdges = [];
+            for (let r = 0; r < rows; r++) {
+                vEdges[r] = [];
+                for (let c = 0; c < cols - 1; c++) {
+                    vEdges[r][c] = Math.random() < 0.5 ? 1 : -1;
+                }
+            }
+
+            return { hEdges, vEdges };
+        }
+
+        function getEdgesForCell(r, c, rows, cols, edgeMap) {
+            const { hEdges, vEdges } = edgeMap;
+            return {
+                top:    r === 0        ? 0 : -hEdges[r - 1][c],
+                bottom: r === rows - 1 ? 0 :  hEdges[r][c],
+                left:   c === 0        ? 0 : -vEdges[r][c - 1],
+                right:  c === cols - 1 ? 0 :  vEdges[r][c]
+            };
+        }
+
+        /* ────────────────────────────────────────────────
+         *  PIECE RENDERER
+         *  Creates an off-screen canvas for a single piece,
+         *  clipped to its jigsaw shape.
+         * ──────────────────────────────────────────────── */
+        function renderPieceCanvas(sourceImg, r, c, rows, cols, cellW, cellH, tabSize, edges) {
+            const pw = cellW + 2 * tabSize;
+            const ph = cellH + 2 * tabSize;
+            const offscreen = document.createElement('canvas');
+            offscreen.width = pw;
+            offscreen.height = ph;
+            const ctx = offscreen.getContext('2d');
+
+            // Build clip path
+            const clipPath = buildPiecePath(edges, cellW, cellH, tabSize, tabSize);
+
+            ctx.save();
+            ctx.clip(clipPath);
+
+            // Draw the portion of the source image that covers this piece + tabs
+            const sx = c * cellW;
+            const sy = r * cellH;
+
+            ctx.drawImage(sourceImg, sx, sy, pw, ph, 0, 0, pw, ph);
+            ctx.restore();
+
+            // Draw piece outline
+            ctx.save();
+            ctx.strokeStyle = 'rgba(0,0,0,0.35)';
+            ctx.lineWidth = 1.5;
+            ctx.stroke(clipPath);
+            ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+            ctx.lineWidth = 0.5;
+            ctx.stroke(clipPath);
+            ctx.restore();
+
+            return offscreen;
+        }
+
+        /* ────────────────────────────────────────────────
+         *  MAIN GAME LOGIC
+         * ──────────────────────────────────────────────── */
+        function startJigsawChallenge(difficulty, jigsawChar) {
+            stopJigsawGame();
+
+            const config = difficultyConfigs[difficulty];
+            const { cols, rows } = config;
+            const totalPuzzles = 10;
+            const totalTimeSec = 10 * 60; // 10 minutes
+
+            // Get images for selected character
+            const charImages = guessImagePool
+                .filter(e => e.character === jigsawChar)
+                .map(e => e.image);
+
+            if (charImages.length === 0) {
+                alert('No images available for ' + jigsawChar);
+                return;
+            }
+
+            // Shuffle and pick up to 10
+            const shuffled = [...charImages].sort(() => Math.random() - 0.5);
+            const puzzleImages = shuffled.slice(0, totalPuzzles);
+
+            jigsawState = {
+                difficulty,
+                character: jigsawChar,
+                cols, rows,
+                puzzleImages,
+                currentPuzzle: 0,
+                totalPuzzles: puzzleImages.length,
+                timeRemaining: totalTimeSec,
+                completed: 0,
+                placedCount: 0,
+                totalPieces: cols * rows,
+                pieces: [],
+                dragPiece: null
+            };
+
+            // Show play area
+            const playArea = document.getElementById('jigsaw-play-area');
+            playArea.classList.add('active');
+
+            updateJigsawHUD();
+
+            // Start timer
+            jigsawTimerId = setInterval(() => {
+                if (!jigsawState) return;
+                jigsawState.timeRemaining--;
+                updateJigsawHUD();
+                if (jigsawState.timeRemaining <= 0) {
+                    endJigsawChallenge(false);
+                }
+            }, 1000);
+
+            // Load first puzzle
+            loadJigsawPuzzle(0);
+        }
+
+        function updateJigsawHUD() {
+            if (!jigsawState) return;
+            const s = jigsawState;
+            document.getElementById('jig-puzzle-num').textContent = `${s.currentPuzzle + 1}/${s.totalPuzzles}`;
+            const min = Math.floor(s.timeRemaining / 60);
+            const sec = s.timeRemaining % 60;
+            document.getElementById('jig-timer').textContent = `${min}:${sec.toString().padStart(2, '0')}`;
+            document.getElementById('jig-placed').textContent = `${s.placedCount}/${s.totalPieces}`;
+        }
+
+        function loadJigsawPuzzle(index) {
+            if (!jigsawState) return;
+            const s = jigsawState;
+            s.currentPuzzle = index;
+            s.placedCount = 0;
+            s.pieces = [];
+
+            const board = document.getElementById('jigsaw-board');
+            const tray = document.getElementById('jigsaw-tray');
+            board.innerHTML = '';
+            tray.innerHTML = '';
+
+            const { cols, rows } = s;
+
+            // Calculate board dimensions (fit nicely in workspace)
+            const boardW = Math.min(350, window.innerWidth * 0.35);
+            const cellW = Math.floor(boardW / cols);
+            const cellH = cellW; // square cells for clean shapes
+            const actualBoardW = cellW * cols;
+            const actualBoardH = cellH * rows;
+            const tabSize = Math.round(cellW * 0.2);
+
+            board.style.width = actualBoardW + 'px';
+            board.style.height = actualBoardH + 'px';
+
+            s.totalPieces = cols * rows;
+            s.cellW = cellW;
+            s.cellH = cellH;
+            s.tabSize = tabSize;
+            s.boardW = actualBoardW;
+            s.boardH = actualBoardH;
+
+            // Loading indicator
+            const loadingMsg = document.createElement('div');
+            loadingMsg.style.cssText = 'display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--muted);font-size:0.9rem;';
+            loadingMsg.textContent = 'Loading puzzle…';
+            board.appendChild(loadingMsg);
+
+            // Load image onto off-screen canvas sized to puzzle
+            const img = new Image();
+            img.onload = () => {
+                // Draw image to fit puzzle area
+                const fitCanvas = document.createElement('canvas');
+                fitCanvas.width = actualBoardW;
+                fitCanvas.height = actualBoardH;
+                const fitCtx = fitCanvas.getContext('2d');
+
+                // Cover-fit the image
+                const imgAspect = img.naturalWidth / img.naturalHeight;
+                const boardAspect = actualBoardW / actualBoardH;
+                let sw, sh, sx, sy;
+                if (imgAspect > boardAspect) {
+                    sh = img.naturalHeight;
+                    sw = sh * boardAspect;
+                    sx = (img.naturalWidth - sw) / 2;
+                    sy = 0;
+                } else {
+                    sw = img.naturalWidth;
+                    sh = sw / boardAspect;
+                    sx = 0;
+                    sy = 0;
+                }
+                fitCtx.drawImage(img, sx, sy, sw, sh, 0, 0, actualBoardW, actualBoardH);
+
+                // Now we need an expanded canvas that has padding for tabs
+                const expandedCanvas = document.createElement('canvas');
+                expandedCanvas.width = actualBoardW + 2 * tabSize;
+                expandedCanvas.height = actualBoardH + 2 * tabSize;
+                const exCtx = expandedCanvas.getContext('2d');
+                // Draw the fitted image in the center with tabSize padding
+                exCtx.drawImage(fitCanvas, tabSize, tabSize);
+
+                // Clear board and add ghost
+                board.innerHTML = '';
+
+                const ghost = document.createElement('div');
+                ghost.className = 'board-ghost';
+                ghost.style.backgroundImage = `url('${s.puzzleImages[index]}')`;
+                ghost.style.backgroundSize = 'cover';
+                ghost.style.backgroundPosition = 'center top';
+                board.appendChild(ghost);
+
+                // Reference image toggle button
+                const refBtn = document.createElement('button');
+                refBtn.className = 'jigsaw-ref-btn';
+                refBtn.innerHTML = '👁';
+                refBtn.title = 'Toggle reference image';
+                let ghostVisible = true;
+                refBtn.onclick = () => {
+                    ghostVisible = !ghostVisible;
+                    ghost.style.opacity = ghostVisible ? '0.12' : '0';
+                    refBtn.style.opacity = ghostVisible ? '1' : '0.5';
+                };
+                board.appendChild(refBtn);
+
+                // Generate edge map
+                const edgeMap = generateEdgeMap(rows, cols);
+
+                // Create grid overlay on board
+                const gridCanvas = document.createElement('canvas');
+                gridCanvas.width = actualBoardW;
+                gridCanvas.height = actualBoardH;
+                gridCanvas.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;opacity:0.2;';
+                const gctx = gridCanvas.getContext('2d');
+                gctx.strokeStyle = 'rgba(255,255,255,0.5)';
+                gctx.lineWidth = 0.5;
+                for (let r = 1; r < rows; r++) {
+                    gctx.beginPath();
+                    gctx.moveTo(0, r * cellH);
+                    gctx.lineTo(actualBoardW, r * cellH);
+                    gctx.stroke();
+                }
+                for (let c = 1; c < cols; c++) {
+                    gctx.beginPath();
+                    gctx.moveTo(c * cellW, 0);
+                    gctx.lineTo(c * cellW, actualBoardH);
+                    gctx.stroke();
+                }
+                board.appendChild(gridCanvas);
+
+                // Create all pieces
+                const piecesArr = [];
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < cols; c++) {
+                        const edges = getEdgesForCell(r, c, rows, cols, edgeMap);
+                        const pieceCanvas = renderPieceCanvas(
+                            expandedCanvas, r, c, rows, cols, cellW, cellH, tabSize, edges
+                        );
+
+                        piecesArr.push({
+                            r, c, edges,
+                            canvas: pieceCanvas,
+                            placed: false,
+                            // Correct position on board (top-left of piece canvas relative to board)
+                            targetX: c * cellW - tabSize,
+                            targetY: r * cellH - tabSize
+                        });
+                    }
+                }
+
+                // Shuffle pieces for the tray
+                const shuffledPieces = [...piecesArr].sort(() => Math.random() - 0.5);
+
+                s.pieces = piecesArr;
+
+                // Add pieces to tray as draggable elements
+                shuffledPieces.forEach(piece => {
+                    const el = document.createElement('canvas');
+                    el.width = piece.canvas.width;
+                    el.height = piece.canvas.height;
+                    el.getContext('2d').drawImage(piece.canvas, 0, 0);
+                    el.className = 'puzzle-piece';
+                    // Scale down display size for tray
+                    const scale = Math.min(1, 80 / Math.max(piece.canvas.width, piece.canvas.height));
+                    el.style.width = Math.round(piece.canvas.width * scale) + 'px';
+                    el.style.height = Math.round(piece.canvas.height * scale) + 'px';
+                    el.dataset.row = piece.r;
+                    el.dataset.col = piece.c;
+                    piece.trayEl = el;
+
+                    setupPieceDrag(el, piece);
+                    tray.appendChild(el);
+                });
+
+                updateJigsawHUD();
+            };
+
+            img.onerror = () => {
+                board.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--accent);">Failed to load image</div>';
+            };
+
+            img.src = s.puzzleImages[index];
+        }
+
+        /* ────────────────────────────────────────────────
+         *  DRAG & DROP + SNAP
+         *  Uses setPointerCapture so ALL move/up events
+         *  route back to the originating element — this
+         *  guarantees the clone follows the cursor even
+         *  when the pointer leaves the element bounds.
+         * ──────────────────────────────────────────────── */
+        function setupPieceDrag(el, piece) {
+            let offsetX = 0, offsetY = 0;
+            let isDragging = false;
+            let clone = null;
+            let activePointerId = null;
+
+            el.addEventListener('pointerdown', (e) => {
+                if (piece.placed || isDragging) return;
+                e.preventDefault();
+                e.stopPropagation();
+
+                activePointerId = e.pointerId;
+                isDragging = true;
+
+                // Capture pointer so move/up always fire on this element
+                el.setPointerCapture(e.pointerId);
+
+                // Create a full-size clone for dragging
+                clone = document.createElement('canvas');
+                clone.width = piece.canvas.width;
+                clone.height = piece.canvas.height;
+                clone.getContext('2d').drawImage(piece.canvas, 0, 0);
+                // Apply styles inline — the clone lives in document.body,
+                // outside #jigsaw-game, so CSS selectors won't reach it.
+                clone.style.cssText = `
+                    position: fixed;
+                    z-index: 99999;
+                    pointer-events: none;
+                    cursor: grabbing;
+                    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+                    width: ${piece.canvas.width}px;
+                    height: ${piece.canvas.height}px;
+                `;
+                document.body.appendChild(clone);
+
+                // Center the piece on the cursor
+                offsetX = piece.canvas.width / 2;
+                offsetY = piece.canvas.height / 2;
+                clone.style.left = (e.clientX - offsetX) + 'px';
+                clone.style.top = (e.clientY - offsetY) + 'px';
+
+                el.style.opacity = '0.3';
+            });
+
+            el.addEventListener('pointermove', (e) => {
+                if (!isDragging || !clone || e.pointerId !== activePointerId) return;
+                e.preventDefault();
+                clone.style.left = (e.clientX - offsetX) + 'px';
+                clone.style.top = (e.clientY - offsetY) + 'px';
+            });
+
+            const finishDrag = (e) => {
+                if (!isDragging || e.pointerId !== activePointerId) return;
+                isDragging = false;
+                activePointerId = null;
+
+                try { el.releasePointerCapture(e.pointerId); } catch(err) {}
+
+                if (!jigsawState) {
+                    if (clone) clone.remove();
+                    clone = null;
+                    el.style.opacity = '1';
+                    return;
+                }
+
+                // Check if dropped near correct board position
+                const board = document.getElementById('jigsaw-board');
+                const boardRect = board.getBoundingClientRect();
+                const s = jigsawState;
+
+                // Where the piece center is relative to the board
+                const dropCenterX = e.clientX - boardRect.left;
+                const dropCenterY = e.clientY - boardRect.top;
+
+                // Piece target center relative to board
+                const targetCenterX = piece.targetX + piece.canvas.width / 2;
+                const targetCenterY = piece.targetY + piece.canvas.height / 2;
+
+                const snapThreshold = s.cellW * 0.45;
+                const dist = Math.sqrt(
+                    Math.pow(dropCenterX - targetCenterX, 2) +
+                    Math.pow(dropCenterY - targetCenterY, 2)
+                );
+
+                if (clone) clone.remove();
+                clone = null;
+
+                if (dist < snapThreshold &&
+                    dropCenterX > -s.tabSize && dropCenterX < s.boardW + s.tabSize &&
+                    dropCenterY > -s.tabSize && dropCenterY < s.boardH + s.tabSize) {
+                    // SNAP! Place the piece on the board
+                    piece.placed = true;
+                    s.placedCount++;
+                    el.style.display = 'none';
+
+                    // Create placed piece element on the board
+                    const placedEl = document.createElement('canvas');
+                    placedEl.width = piece.canvas.width;
+                    placedEl.height = piece.canvas.height;
+                    placedEl.getContext('2d').drawImage(piece.canvas, 0, 0);
+                    placedEl.className = 'placed-piece';
+                    placedEl.style.left = piece.targetX + 'px';
+                    placedEl.style.top = piece.targetY + 'px';
+                    placedEl.style.width = piece.canvas.width + 'px';
+                    placedEl.style.height = piece.canvas.height + 'px';
+                    placedEl.style.zIndex = '2';
+                    board.appendChild(placedEl);
+
+                    // Snap sound
+                    try {
+                        const actx = new (window.AudioContext || window.webkitAudioContext)();
+                        const osc = actx.createOscillator();
+                        const g = actx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(880, actx.currentTime);
+                        g.gain.setValueAtTime(0.08, actx.currentTime);
+                        g.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + 0.1);
+                        osc.connect(g).connect(actx.destination);
+                        osc.start(); osc.stop(actx.currentTime + 0.1);
+                    } catch(e) {}
+
+                    updateJigsawHUD();
+
+                    // Check if puzzle complete
+                    if (s.placedCount >= s.totalPieces) {
+                        puzzleComplete();
+                    }
+                } else {
+                    // Return to tray
+                    el.style.opacity = '1';
+                }
+            };
+
+            el.addEventListener('pointerup', finishDrag);
+            el.addEventListener('pointercancel', finishDrag);
+        }
+
+        function puzzleComplete() {
+            if (!jigsawState) return;
+            const s = jigsawState;
+            s.completed++;
+
+            // Brief celebration flash
+            const board = document.getElementById('jigsaw-board');
+            board.style.boxShadow = '0 0 40px rgba(255,79,182,0.6)';
+            setTimeout(() => { board.style.boxShadow = ''; }, 600);
+
+            // Completion sound
+            try {
+                const actx = new (window.AudioContext || window.webkitAudioContext)();
+                [523, 659, 784].forEach((freq, i) => {
+                    setTimeout(() => {
+                        const o = actx.createOscillator();
+                        const g = actx.createGain();
+                        o.type = 'triangle';
+                        o.frequency.setValueAtTime(freq, actx.currentTime);
+                        g.gain.setValueAtTime(0.12, actx.currentTime);
+                        g.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + 0.3);
+                        o.connect(g).connect(actx.destination);
+                        o.start(); o.stop(actx.currentTime + 0.3);
+                    }, i * 150);
+                });
+            } catch(e) {}
+
+            // Next puzzle or end
+            if (s.currentPuzzle + 1 < s.totalPuzzles) {
+                setTimeout(() => {
+                    if (jigsawState && jigsawState.timeRemaining > 0) {
+                        loadJigsawPuzzle(s.currentPuzzle + 1);
+                    }
+                }, 800);
+            } else {
+                setTimeout(() => endJigsawChallenge(true), 800);
+            }
+        }
+
+        function endJigsawChallenge(allDone) {
+            if (jigsawTimerId) { clearInterval(jigsawTimerId); jigsawTimerId = null; }
+
+            const playArea = document.getElementById('jigsaw-play-area');
+            playArea.classList.remove('active');
+
+            const msg = document.getElementById('jigsaw-complete-msg');
+            const title = document.getElementById('jigsaw-end-title');
+            const text = document.getElementById('jigsaw-end-text');
+
+            if (allDone) {
+                title.textContent = '🎉 Challenge Complete!';
+                const elapsed = 600 - (jigsawState ? jigsawState.timeRemaining : 0);
+                const min = Math.floor(elapsed / 60);
+                const sec = elapsed % 60;
+                text.textContent = `You solved all ${jigsawState.totalPuzzles} puzzles in ${min}m ${sec}s!`;
+
+                // Save high score (time remaining = higher is better)
+                if (jigsawState) {
+                    const scoreKey = `ks_hs_Jigsaw_${jigsawState.character}_${jigsawState.difficulty}`;
+                    const prev = parseInt(localStorage.getItem(scoreKey) || '0');
+                    const newScore = jigsawState.timeRemaining;
+                    if (newScore > prev) {
+                        localStorage.setItem(scoreKey, newScore);
+                    }
+                }
+            } else {
+                title.textContent = '⏰ Time\'s Up!';
+                text.textContent = `You completed ${jigsawState ? jigsawState.completed : 0} out of ${jigsawState ? jigsawState.totalPuzzles : 10} puzzles.`;
+            }
+
+            msg.classList.add('show');
+        }
+
     </script>
 </body>
 </html>
